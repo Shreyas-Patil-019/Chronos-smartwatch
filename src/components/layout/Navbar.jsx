@@ -1,119 +1,214 @@
-import React, { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import { ShoppingBag, Heart, User, Menu, X, Watch } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { ShoppingBag, Heart, User, Search, Menu, X, Watch } from 'lucide-react';
 import { BRAND, NAV_LINKS } from '../../utils/constants';
 import { useCart } from '../../hooks/useCart';
 import { useWishlist } from '../../hooks/useWishlist';
+import SearchBar from '../ui/SearchBar';
 
 export const Navbar = () => {
+  const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const { totalItemCount } = useCart();
   const { wishlistCount } = useWishlist();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleSearchSubmit = (e) => {
+    e?.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchOpen(false);
+      setSearchQuery('');
+    }
+  };
 
   return (
-    <header className="sticky top-0 z-40 w-full glass-panel border-b border-zinc-800/80">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-2 text-white group">
-          <div className="p-2 rounded-xl bg-zinc-800/80 border border-zinc-700/60 group-hover:border-zinc-500 transition">
-            <Watch className="w-5 h-5 text-white" />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-lg font-extrabold tracking-wider font-mono">{BRAND.NAME}</span>
-            <span className="text-[9px] text-zinc-400 tracking-widest uppercase font-mono">{BRAND.TAGLINE}</span>
-          </div>
-        </Link>
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 ${
+          scrolled
+            ? 'bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-800/50 shadow-2xl py-3'
+            : 'bg-transparent border-b border-transparent py-5'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+          {/* LEFT: Brand Logo / Wordmark */}
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="p-2 rounded-xl bg-zinc-900/90 border border-zinc-800 group-hover:border-zinc-500 transition-colors shadow-inner">
+              <Watch className="w-5 h-5 text-amber-400 group-hover:rotate-12 transition-transform duration-300" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-black tracking-widest text-white font-mono uppercase">
+                {BRAND.NAME}
+              </span>
+              <span className="text-[9px] text-zinc-400 tracking-[0.25em] uppercase font-mono font-medium -mt-1">
+                {BRAND.TAGLINE}
+              </span>
+            </div>
+          </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8">
-          {NAV_LINKS.map((link) => (
-            <NavLink
-              key={link.path}
-              to={link.path}
-              className={({ isActive }) =>
-                `text-sm font-medium transition-colors ${
-                  isActive ? 'text-white font-semibold' : 'text-zinc-400 hover:text-white'
-                }`
-              }
+          {/* CENTER: Navigation Links */}
+          <nav className="hidden md:flex items-center gap-9">
+            {NAV_LINKS.map((link) => (
+              <NavLink
+                key={link.path}
+                to={link.path}
+                end={link.path === '/'}
+                className={({ isActive }) =>
+                  `text-xs font-mono tracking-widest uppercase transition-all relative py-1 ${
+                    isActive
+                      ? 'text-white font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-amber-400'
+                      : 'text-zinc-400 hover:text-white'
+                  }`
+                }
+              >
+                {link.name}
+              </NavLink>
+            ))}
+          </nav>
+
+          {/* RIGHT: Action Buttons */}
+          <div className="flex items-center gap-3">
+            {/* Search Trigger */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-900/80 rounded-xl transition border border-transparent hover:border-zinc-800"
+              aria-label="Search Collection"
             >
-              {link.name}
-            </NavLink>
-          ))}
-        </nav>
+              <Search className="w-4 h-4" />
+            </button>
 
-        {/* Action Icons */}
-        <div className="flex items-center gap-4">
-          <Link
-            to="/wishlist"
-            className="relative p-2 text-zinc-400 hover:text-white hover:bg-zinc-800/60 rounded-xl transition"
-            aria-label="Wishlist"
-          >
-            <Heart className="w-5 h-5" />
-            {wishlistCount > 0 && (
-              <span className="absolute top-1 right-1 w-4 h-4 text-[10px] font-bold bg-amber-500 text-black rounded-full flex items-center justify-center">
-                {wishlistCount}
-              </span>
-            )}
-          </Link>
+            {/* Wishlist */}
+            <Link
+              to="/wishlist"
+              className="relative p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-900/80 rounded-xl transition border border-transparent hover:border-zinc-800"
+              aria-label="Wishlist"
+            >
+              <Heart className="w-4 h-4" />
+              {wishlistCount > 0 && (
+                <span className="absolute top-1 right-1 w-4 h-4 text-[9px] font-bold bg-amber-400 text-black rounded-full flex items-center justify-center font-mono">
+                  {wishlistCount}
+                </span>
+              )}
+            </Link>
 
-          <Link
-            to="/cart"
-            className="relative p-2 text-zinc-400 hover:text-white hover:bg-zinc-800/60 rounded-xl transition"
-            aria-label="Shopping Cart"
-          >
-            <ShoppingBag className="w-5 h-5" />
-            {totalItemCount > 0 && (
-              <span className="absolute top-1 right-1 w-4 h-4 text-[10px] font-bold bg-white text-black rounded-full flex items-center justify-center">
-                {totalItemCount}
-              </span>
-            )}
-          </Link>
+            {/* Account Link */}
+            <Link
+              to="/account"
+              className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs font-mono text-zinc-300 bg-zinc-900/60 border border-zinc-800 hover:border-zinc-600 hover:text-white rounded-xl transition shadow-sm"
+              aria-label="Account"
+            >
+              <User className="w-3.5 h-3.5" />
+              <span>ACCOUNT</span>
+            </Link>
 
-          <Link
-            to="/login"
-            className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 text-xs font-medium text-zinc-300 border border-zinc-800 hover:border-zinc-600 hover:text-white rounded-xl transition"
-          >
-            <User className="w-4 h-4" />
-            <span>Account</span>
-          </Link>
+            {/* Cart Link */}
+            <Link
+              to="/cart"
+              className="relative p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-900/80 rounded-xl transition border border-transparent hover:border-zinc-800"
+              aria-label="Shopping Cart"
+            >
+              <ShoppingBag className="w-4 h-4" />
+              {totalItemCount > 0 && (
+                <span className="absolute top-1 right-1 w-4 h-4 text-[9px] font-bold bg-white text-black rounded-full flex items-center justify-center font-mono">
+                  {totalItemCount}
+                </span>
+              )}
+            </Link>
 
-          {/* Mobile menu toggle */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-zinc-400 hover:text-white rounded-xl"
-            aria-label="Toggle Navigation Menu"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+            {/* Mobile Menu Toggle */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-900/80 rounded-xl transition"
+              aria-label="Toggle Navigation Menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
-      </div>
 
-      {/* Mobile Drawer */}
-      {mobileMenuOpen && (
-        <div className="md:hidden border-t border-zinc-800 bg-zinc-950 px-4 pt-3 pb-6 space-y-3">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-base font-medium text-zinc-300 hover:text-white"
+        {/* Mobile Animated Drawer */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-zinc-800/80 bg-zinc-950/95 backdrop-blur-2xl px-6 pt-4 pb-8 space-y-4 animate-fadeIn">
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2.5 text-sm font-mono tracking-widest uppercase text-zinc-300 hover:text-amber-400 border-b border-zinc-900/80"
+              >
+                {link.name}
+              </Link>
+            ))}
+            <div className="pt-2 flex flex-col gap-3">
+              <Link
+                to="/account"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-3 py-2.5 text-xs font-mono text-zinc-300 hover:text-white"
+              >
+                <User className="w-4 h-4 text-amber-400" />
+                <span>MY ACCOUNT</span>
+              </Link>
+            </div>
+          </div>
+        )}
+      </header>
+
+      {/* Search Modal Overlay */}
+      {searchOpen && (
+        <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+          <div className="relative w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
+            <button
+              onClick={() => setSearchOpen(false)}
+              className="absolute top-4 right-4 text-zinc-400 hover:text-white p-1"
             >
-              {link.name}
-            </Link>
-          ))}
-          <div className="pt-2 border-t border-zinc-800">
-            <Link
-              to="/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2 py-2 text-sm text-zinc-300 hover:text-white"
-            >
-              <User className="w-4 h-4" />
-              <span>Account Sign In</span>
-            </Link>
+              <X className="w-5 h-5" />
+            </button>
+
+            <h3 className="text-xs font-mono uppercase tracking-widest text-amber-400 mb-3">
+              Search CHRONOS Collection
+            </h3>
+            
+            <form onSubmit={handleSearchSubmit}>
+              <SearchBar
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder="Search models (e.g., Chronos Pro, Titanium, Sport)..."
+              />
+              <div className="mt-4 flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setSearchOpen(false)}
+                  className="px-4 py-2 text-xs font-mono text-zinc-400 hover:text-white"
+                >
+                  CANCEL
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-amber-400 hover:bg-amber-300 text-black font-mono text-xs font-bold rounded-xl transition"
+                >
+                  SEARCH
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 };
 

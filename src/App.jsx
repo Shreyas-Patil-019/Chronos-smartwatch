@@ -12,6 +12,7 @@ import { CustomizerProvider } from './context/CustomizerContext';
 
 // Lazy Loaded Pages
 const HomePage = lazy(() => import('./pages/home/HomePage'));
+const TechnologyPage = lazy(() => import('./pages/technology/TechnologyPage'));
 const ProductsPage = lazy(() => import('./pages/products/ProductsPage'));
 const ProductDetailPage = lazy(() => import('./pages/product/ProductDetailPage'));
 const CartPage = lazy(() => import('./pages/cart/CartPage'));
@@ -44,6 +45,7 @@ export function App() {
                   <Routes>
                     <Route path="/" element={<Layout />}>
                       <Route index element={<HomePage />} />
+                      <Route path="technology" element={<TechnologyPage />} />
                       <Route path="products" element={<ProductsPage />} />
                       <Route path="products/:slug" element={<ProductDetailPage />} />
                       <Route path="cart" element={<CartPage />} />

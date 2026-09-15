@@ -1,21 +1,45 @@
 import React from 'react';
 
 /**
- * Studio Lighting Setup for 3D Smartwatch Showcase
+ * Luxury Studio Lighting Architecture for CHRONOS 3D Smartwatch Showcase
  */
 export const WatchLighting = () => {
   return (
     <>
-      <ambientLight intensity={0.6} />
+      {/* Soft Ambient Fill */}
+      <ambientLight intensity={0.7} />
+
+      {/* Key Directional Light (Top-Right Warm Studio Light) */}
       <directionalLight
-        position={[5, 8, 5]}
-        intensity={1.5}
+        position={[6, 8, 6]}
+        intensity={1.8}
         castShadow
         shadow-mapSize-width={1024}
         shadow-mapSize-height={1024}
+        shadow-bias={-0.0001}
       />
-      <directionalLight position={[-5, 5, -5]} intensity={0.5} color="#3b82f6" />
-      <pointLight position={[0, -5, 2]} intensity={0.8} color="#d4af37" />
+
+      {/* Cool Rim Edge Light (Left Rear Edge Sheen) */}
+      <directionalLight
+        position={[-6, 4, -4]}
+        intensity={1.2}
+        color="#38bdf8"
+      />
+
+      {/* Gold Under-Glow Point Light */}
+      <pointLight
+        position={[0, -3, 3]}
+        intensity={0.9}
+        color="#fbbf24"
+        distance={8}
+      />
+
+      {/* Front Face Soft Fill */}
+      <directionalLight
+        position={[0, 2, 8]}
+        intensity={0.4}
+        color="#ffffff"
+      />
     </>
   );
 };

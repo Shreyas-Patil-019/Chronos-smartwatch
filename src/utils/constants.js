@@ -10,8 +10,8 @@ export const BRAND = {
 export const NAV_LINKS = [
   { name: 'Home', path: '/' },
   { name: 'Collection', path: '/products' },
+  { name: 'Technology', path: '/technology' },
   { name: 'About', path: '/about' },
-  { name: 'Contact', path: '/contact' },
 ];
 
 export const FOOTER_LINKS = {
@@ -23,7 +23,7 @@ export const FOOTER_LINKS = {
   ],
   company: [
     { name: 'About Us', path: '/about' },
-    { name: 'Contact', path: '/contact' },
+    { name: 'Technology', path: '/technology' },
     { name: 'Terms of Service', path: '/terms' },
     { name: 'Privacy Policy', path: '/privacy' },
   ],
