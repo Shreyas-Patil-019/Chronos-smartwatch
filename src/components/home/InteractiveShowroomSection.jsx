@@ -1,20 +1,33 @@
-import React, { useState, useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import React, { useState, useRef, Suspense } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, Html } from '@react-three/drei';
 import WatchModel from '../three/WatchModel';
 import WatchLighting from '../three/WatchLighting';
 import WatchEnvironment from '../three/WatchEnvironment';
 import ErrorBoundary from '../ui/ErrorBoundary';
-import { RotateCcw, ZoomIn, ZoomOut, Play, Pause, Sparkles, Hand, Eye } from 'lucide-react';
+import { RotateCcw, Play, Pause, Sparkles, Hand, Eye } from 'lucide-react';
 
-const ControlledWatchScene = ({ finish, isAutoRotating, dpr }) => {
+const CanvasLoader = () => (
+  <Html center>
+    <div className="flex flex-col items-center justify-center p-4 text-center space-y-2 pointer-events-none">
+      <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+      <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase whitespace-nowrap">
+        Loading 3D Smartwatch...
+      </span>
+    </div>
+  </Html>
+);
+
+const ControlledWatchScene = ({ finish, isAutoRotating }) => {
   const controlsRef = useRef();
 
   return (
     <>
       <WatchLighting />
-      <WatchModel color={finish.color} strap={finish.strap} enableMouseInteraction={false} scale={1.1} />
-      <WatchEnvironment />
+      <Suspense fallback={<CanvasLoader />}>
+        <WatchModel color={finish.color} strap={finish.strap} enableMouseInteraction={false} scale={1.1} />
+        <WatchEnvironment />
+      </Suspense>
       <OrbitControls
         ref={controlsRef}
         enableZoom={true}

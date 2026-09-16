@@ -4,7 +4,7 @@ import ErrorBoundary from '../ui/ErrorBoundary';
 
 /**
  * ProductViewer — Primary reusable 3D viewport container for CHRONOS.
- * Provides device performance capping, WebGL fallback card, and cursor integration.
+ * Provides device performance capping, WebGL fallback card, and GLB asset integration.
  */
 export const ProductViewer = ({
   color = '#121214',
@@ -13,6 +13,7 @@ export const ProductViewer = ({
   className = 'w-full h-[450px]',
   enableMouseInteraction = true,
   scale = 1,
+  modelUrl = '/models/chronos-watch.glb',
 }) => {
   const [hasWebGL, setHasWebGL] = useState(true);
   const [dpr, setDpr] = useState(1.5);
@@ -70,6 +71,7 @@ export const ProductViewer = ({
           enableMouseInteraction={enableMouseInteraction}
           scale={scale}
           dpr={dpr}
+          modelUrl={modelUrl}
           className="w-full h-full"
         />
       </ErrorBoundary>

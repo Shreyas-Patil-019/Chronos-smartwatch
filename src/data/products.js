@@ -19,7 +19,7 @@ export const products = [
       '/assets/chronos-pro-angle.jpg',
       '/assets/chronos-pro-wrist.jpg',
     ],
-    model: '/models/smartwatch.glb',
+    model: '/models/chronos-watch.glb',
     colors: [
       { id: 'space-black', name: 'Space Black', hex: '#121214', accentHex: '#000000' },
       { id: 'titanium-silver', name: 'Titanium Silver', hex: '#d1d5db', accentHex: '#9ca3af' },
@@ -69,7 +69,7 @@ export const products = [
       '/assets/chronos-x-main.jpg',
       '/assets/chronos-x-angle.jpg',
     ],
-    model: '/models/smartwatch.glb',
+    model: '/models/chronos-watch.glb',
     colors: [
       { id: 'stealth-matt-black', name: 'Stealth Matte Black', hex: '#0a0a0c', accentHex: '#18181b' },
       { id: 'ceramic-white', name: 'Pure Ceramic White', hex: '#f8fafc', accentHex: '#e2e8f0' },
@@ -115,7 +115,7 @@ export const products = [
       '/assets/chronos-ultra-main.jpg',
       '/assets/chronos-ultra-side.jpg',
     ],
-    model: '/models/smartwatch.glb',
+    model: '/models/chronos-watch.glb',
     colors: [
       { id: 'desert-tan', name: 'Tactical Desert Tan', hex: '#d2b48c', accentHex: '#b89768' },
       { id: 'stealth-grey', name: 'Alpine Grey', hex: '#64748b', accentHex: '#475569' },
@@ -161,7 +161,7 @@ export const products = [
       '/assets/chronos-sport-main.jpg',
       '/assets/chronos-sport-active.jpg',
     ],
-    model: '/models/smartwatch.glb',
+    model: '/models/chronos-watch.glb',
     colors: [
       { id: 'electric-blue', name: 'Electric Cyan', hex: '#06b6d4', accentHex: '#0891b2' },
       { id: 'blaze-orange', name: 'Blaze Orange', hex: '#f97316', accentHex: '#ea580c' },
