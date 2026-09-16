@@ -21,7 +21,7 @@ export const ProductsPage = () => {
         <span className="text-xs font-mono uppercase tracking-widest text-zinc-500">Chronos Catalog</span>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Smartwatch Collection</h1>
         <p className="text-sm text-zinc-400 max-w-xl">
-          Products page architecture preview — Full catalog experience coming in Phase 6.
+          Explore the complete CHRONOS smartwatch ecosystem. Engineered with aerospace Grade 5 titanium, sapphire crystal, and quantum biometric intelligence.
         </p>
       </div>
 

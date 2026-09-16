@@ -1,20 +1,35 @@
 import React, { useState, useRef, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
+import { motion, useReducedMotion } from 'framer-motion';
 import * as THREE from 'three';
 import WatchModel from '../three/WatchModel';
 import WatchLighting from '../three/WatchLighting';
 import WatchEnvironment from '../three/WatchEnvironment';
 import WatchControls from '../three/WatchControls';
 import ErrorBoundary from '../ui/ErrorBoundary';
-import { RotateCcw, Play, Pause, Sparkles, Hand, Eye } from 'lucide-react';
+import { RotateCcw, Play, Pause, Sparkles, Hand, Eye, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 35 },
+  visible: (custom = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.7,
+      ease: [0.16, 1, 0.3, 1],
+      delay: custom * 0.1,
+    },
+  }),
+};
 
 const CanvasLoader = () => (
   <Html center>
     <div className="flex flex-col items-center justify-center p-4 text-center space-y-2 pointer-events-none">
       <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
       <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase whitespace-nowrap">
-        Loading 3D Smartwatch...
+        Loading 3D Studio...
       </span>
     </div>
   </Html>
@@ -60,7 +75,12 @@ const ControlledWatchScene = ({ finish, isAutoRotating, isResetting, onResetComp
     <>
       <WatchLighting />
       <Suspense fallback={<CanvasLoader />}>
-        <WatchModel color={finish.color} strap={finish.strap} enableMouseInteraction={false} scale={1.1} />
+        <WatchModel
+          color={finish.color}
+          strap={finish.strap}
+          enableMouseInteraction={false}
+          scale={1.1}
+        />
         <WatchEnvironment />
       </Suspense>
       <WatchControls
@@ -81,6 +101,7 @@ const ControlledWatchScene = ({ finish, isAutoRotating, isResetting, onResetComp
 };
 
 export const InteractiveShowroomSection = () => {
+  const shouldReduceMotion = useReducedMotion();
   const [selectedFinish, setSelectedFinish] = useState({
     color: '#121214',
     name: 'Space Black Titanium',
@@ -106,30 +127,56 @@ export const InteractiveShowroomSection = () => {
   };
 
   return (
-    <section className="relative py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
-      {/* Section Title */}
-      <div className="text-center space-y-3 max-w-2xl mx-auto mb-12">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-zinc-900 border border-amber-400/30 rounded-full">
-          <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-          <span className="text-[10px] font-mono font-bold tracking-[0.25em] text-amber-400 uppercase">
-            DEDICATED 3D SHOWROOM
-          </span>
-        </div>
-        <h2 className="text-3xl sm:text-5xl font-black text-white uppercase font-mono tracking-tight">
+    <section id="3d-showroom" className="relative py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10 border-t border-zinc-900">
+      {/* Background Radial Studio Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-amber-500/5 blur-3xl rounded-full pointer-events-none" />
+
+      {/* Section Title Entrance */}
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-60px' }}
+        className="text-center space-y-4 max-w-2xl mx-auto mb-14"
+      >
+        <motion.div variants={fadeInUp} custom={0}>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-zinc-900 border border-amber-400/30 rounded-full">
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <span className="text-[10px] font-mono font-bold tracking-[0.25em] text-amber-400 uppercase">
+              ACT 06 // 3D PRODUCT STUDIO
+            </span>
+          </div>
+        </motion.div>
+
+        <motion.h2
+          variants={fadeInUp}
+          custom={1}
+          className="text-4xl sm:text-6xl font-black text-white uppercase font-mono tracking-tight"
+        >
           EXPLORE CHRONOS <span className="text-amber-400">IN 3D</span>
-        </h2>
-        <p className="text-xs sm:text-sm text-zinc-400 font-sans leading-relaxed">
-          Interact with the smartwatch in real-time. Drag to rotate 360°, scroll to zoom, and customize materials.
-        </p>
-      </div>
+        </motion.h2>
+
+        <motion.p
+          variants={fadeInUp}
+          custom={2}
+          className="text-sm text-zinc-400 font-sans leading-relaxed"
+        >
+          Inspect precision engineering from every angle. Drag to rotate 360°, scroll to zoom, and test material finishes in real-time.
+        </motion.p>
+      </motion.div>
 
       {/* Self-Contained Interactive 3D Card Boundary */}
-      <div className="relative max-w-4xl mx-auto h-[480px] sm:h-[560px] bg-zinc-950 border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl group touch-none">
-        {/* Subtle Ambient Studio Light Glow */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/10 via-blue-500/5 to-transparent pointer-events-none" />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96, y: 30 }}
+        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+        viewport={{ once: true, margin: '-60px' }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="relative max-w-4xl mx-auto h-[460px] sm:h-[540px] bg-gradient-to-b from-zinc-900/60 via-zinc-950 to-black border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl group touch-none"
+      >
+        {/* Studio Lighting Radial Bloom */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/10 via-transparent to-blue-500/5 pointer-events-none" />
 
         {/* Instruction Badges inside Viewer */}
-        <div className="absolute top-4 left-4 z-20 flex items-center gap-3">
+        <div className="absolute top-4 left-4 z-20 flex items-center gap-2 pointer-events-none">
           <div className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900/90 border border-zinc-800 rounded-xl backdrop-blur-md">
             <Hand className="w-3.5 h-3.5 text-amber-400" />
             <span className="text-[10px] font-mono text-zinc-300 uppercase tracking-widest">
@@ -150,8 +197,8 @@ export const InteractiveShowroomSection = () => {
             <button
               key={f.name}
               onClick={() => setSelectedFinish(f)}
-              className={`w-6 h-6 rounded-full border-2 transition-transform ${
-                selectedFinish.name === f.name ? 'border-amber-400 scale-125' : 'border-zinc-700 hover:scale-110'
+              className={`w-6 h-6 rounded-full border-2 transition-transform cursor-pointer ${
+                selectedFinish.name === f.name ? 'border-amber-400 scale-125 shadow-lg' : 'border-zinc-700 hover:scale-110'
               }`}
               style={{ backgroundColor: f.color }}
               title={f.name}
@@ -165,7 +212,7 @@ export const InteractiveShowroomSection = () => {
           <ErrorBoundary
             fallback={
               <div className="flex items-center justify-center h-full text-zinc-500 font-mono text-xs">
-                3D Interactive Viewer Ready
+                3D Interactive Studio Ready
               </div>
             }
           >
@@ -184,11 +231,11 @@ export const InteractiveShowroomSection = () => {
           </ErrorBoundary>
         </div>
 
-        {/* Bottom Interactive Toolbar Controls inside Viewer */}
+        {/* Bottom Interactive Toolbar Controls */}
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-4 py-2 bg-zinc-900/90 border border-zinc-800 rounded-full backdrop-blur-md shadow-2xl">
           <button
             onClick={() => setIsAutoRotating(!isAutoRotating)}
-            className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition"
+            className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition cursor-pointer"
             title={isAutoRotating ? 'Pause auto-rotation' : 'Play auto-rotation'}
             aria-label="Toggle auto rotate"
           >
@@ -197,7 +244,7 @@ export const InteractiveShowroomSection = () => {
           <div className="w-px h-4 bg-zinc-800" />
           <button
             onClick={handleResetView}
-            className={`p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition ${isResetting ? 'animate-spin text-amber-400' : ''}`}
+            className={`p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition cursor-pointer ${isResetting ? 'animate-spin text-amber-400' : ''}`}
             title="Reset product view orientation"
             aria-label="Reset product view"
           >
@@ -208,6 +255,17 @@ export const InteractiveShowroomSection = () => {
             {selectedFinish.name}
           </span>
         </div>
+      </motion.div>
+
+      {/* Showroom CTA Anchor leading into Collection */}
+      <div className="mt-8 text-center">
+        <Link
+          to="/products"
+          className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-zinc-400 hover:text-amber-400 transition"
+        >
+          <span>Configure Your Custom Model In Collection</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
       </div>
     </section>
   );
