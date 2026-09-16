@@ -1,22 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import WatchScene from './WatchScene';
 import ErrorBoundary from '../ui/ErrorBoundary';
+import { RotateCcw, Play, Pause, Hand, Eye } from 'lucide-react';
 
 /**
  * ProductViewer — Primary reusable 3D viewport container for CHRONOS.
- * Provides device performance capping, WebGL fallback card, and GLB asset integration.
+ * Phase 4: Provides full 360° mouse/touch rotation, scoped zoom, smooth reset view,
+ * device performance capping, WebGL fallback, and GLB asset integration.
  */
 export const ProductViewer = ({
   color = '#121214',
   strap = 'silicone-black',
-  autoRotate = false,
+  autoRotate: initialAutoRotate = false,
   className = 'w-full h-[450px]',
-  enableMouseInteraction = true,
+  enableMouseInteraction = false,
   scale = 1,
   modelUrl = '/models/chronos-watch.glb',
+  showControls = true,
 }) => {
   const [hasWebGL, setHasWebGL] = useState(true);
   const [dpr, setDpr] = useState(1.5);
+  const [isAutoRotating, setIsAutoRotating] = useState(initialAutoRotate);
+  const [isResetting, setIsResetting] = useState(false);
+  const controlsRef = useRef(null);
 
   useEffect(() => {
     // Check WebGL availability
@@ -38,6 +44,14 @@ export const ProductViewer = ({
     }
   }, []);
 
+  const handleResetView = () => {
+    setIsResetting(true);
+  };
+
+  const handleResetComplete = () => {
+    setIsResetting(false);
+  };
+
   if (!hasWebGL) {
     return (
       <div className={`relative flex items-center justify-center bg-zinc-900/60 border border-zinc-800 rounded-3xl p-8 ${className}`}>
@@ -55,7 +69,24 @@ export const ProductViewer = ({
   }
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative overflow-hidden group touch-none ${className}`}>
+      {/* Non-intrusive Instructional Micro-Badges */}
+      <div className="absolute top-4 left-4 z-20 flex items-center gap-2 pointer-events-none">
+        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900/90 border border-zinc-800 rounded-xl backdrop-blur-md shadow-md">
+          <Hand className="w-3.5 h-3.5 text-amber-400" />
+          <span className="text-[10px] font-mono text-zinc-300 uppercase tracking-widest">
+            DRAG TO ROTATE
+          </span>
+        </div>
+        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900/90 border border-zinc-800 rounded-xl backdrop-blur-md shadow-md hidden sm:flex">
+          <Eye className="w-3.5 h-3.5 text-zinc-400" />
+          <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">
+            SCROLL / PINCH TO ZOOM
+          </span>
+        </div>
+      </div>
+
+      {/* 3D Scene Viewport */}
       <ErrorBoundary
         fallback={
           <div className="flex flex-col items-center justify-center h-full bg-zinc-900/40 rounded-2xl border border-zinc-800 p-6 text-center text-zinc-400">
@@ -67,14 +98,40 @@ export const ProductViewer = ({
         <WatchScene
           color={color}
           strap={strap}
-          autoRotate={autoRotate}
+          autoRotate={isAutoRotating}
           enableMouseInteraction={enableMouseInteraction}
           scale={scale}
           dpr={dpr}
           modelUrl={modelUrl}
-          className="w-full h-full"
+          className="w-full h-full cursor-grab active:cursor-grabbing"
+          isResetting={isResetting}
+          onResetComplete={handleResetComplete}
+          controlsRef={controlsRef}
         />
       </ErrorBoundary>
+
+      {/* Interactive Controls Overlay Bar */}
+      {showControls && (
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-3.5 py-1.5 bg-zinc-900/90 border border-zinc-800 rounded-full backdrop-blur-md shadow-xl">
+          <button
+            onClick={() => setIsAutoRotating(!isAutoRotating)}
+            className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition"
+            title={isAutoRotating ? 'Pause auto-rotation' : 'Play auto-rotation'}
+            aria-label="Toggle auto rotate"
+          >
+            {isAutoRotating ? <Pause className="w-3.5 h-3.5 text-amber-400" /> : <Play className="w-3.5 h-3.5" />}
+          </button>
+          <div className="w-px h-3.5 bg-zinc-800" />
+          <button
+            onClick={handleResetView}
+            className={`p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition ${isResetting ? 'animate-spin text-amber-400' : ''}`}
+            title="Reset product view orientation"
+            aria-label="Reset product view"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

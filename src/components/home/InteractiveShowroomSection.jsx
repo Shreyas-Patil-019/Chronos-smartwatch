@@ -1,9 +1,11 @@
 import React, { useState, useRef, Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Html } from '@react-three/drei';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Html } from '@react-three/drei';
+import * as THREE from 'three';
 import WatchModel from '../three/WatchModel';
 import WatchLighting from '../three/WatchLighting';
 import WatchEnvironment from '../three/WatchEnvironment';
+import WatchControls from '../three/WatchControls';
 import ErrorBoundary from '../ui/ErrorBoundary';
 import { RotateCcw, Play, Pause, Sparkles, Hand, Eye } from 'lucide-react';
 
@@ -18,9 +20,42 @@ const CanvasLoader = () => (
   </Html>
 );
 
-const ControlledWatchScene = ({ finish, isAutoRotating }) => {
-  const controlsRef = useRef();
+/**
+ * Smooth Camera Reset lerper for Showroom
+ */
+const ShowroomResetController = ({ isResetting, onResetComplete, controlsRef }) => {
+  const defaultPos = useRef(new THREE.Vector3(0, 1.8, 5.2));
+  const defaultTarget = useRef(new THREE.Vector3(0, 0, 0));
 
+  useFrame((state, delta) => {
+    if (!isResetting) return;
+
+    const camera = state.camera;
+    const controls = controlsRef?.current;
+
+    camera.position.lerp(defaultPos.current, delta * 6);
+
+    if (controls) {
+      controls.target.lerp(defaultTarget.current, delta * 6);
+      controls.update();
+    }
+
+    if (camera.position.distanceTo(defaultPos.current) < 0.05) {
+      camera.position.copy(defaultPos.current);
+      if (controls) {
+        controls.target.copy(defaultTarget.current);
+        controls.update();
+      }
+      if (onResetComplete) {
+        onResetComplete();
+      }
+    }
+  });
+
+  return null;
+};
+
+const ControlledWatchScene = ({ finish, isAutoRotating, isResetting, onResetComplete, controlsRef }) => {
   return (
     <>
       <WatchLighting />
@@ -28,16 +63,18 @@ const ControlledWatchScene = ({ finish, isAutoRotating }) => {
         <WatchModel color={finish.color} strap={finish.strap} enableMouseInteraction={false} scale={1.1} />
         <WatchEnvironment />
       </Suspense>
-      <OrbitControls
+      <WatchControls
         ref={controlsRef}
         enableZoom={true}
-        enablePan={false}
         autoRotate={isAutoRotating}
         autoRotateSpeed={1.5}
-        minDistance={3.5}
-        maxDistance={8}
-        rotateSpeed={0.8}
-        zoomSpeed={0.8}
+        minDistance={2.8}
+        maxDistance={8.0}
+      />
+      <ShowroomResetController
+        isResetting={isResetting}
+        onResetComplete={onResetComplete}
+        controlsRef={controlsRef}
       />
     </>
   );
@@ -50,8 +87,9 @@ export const InteractiveShowroomSection = () => {
     strap: 'silicone-black',
   });
 
-  const [isAutoRotating, setIsAutoRotating] = useState(true);
-  const [zoomKey, setZoomKey] = useState(0);
+  const [isAutoRotating, setIsAutoRotating] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
+  const controlsRef = useRef(null);
 
   const finishes = [
     { color: '#121214', name: 'Space Black Titanium', strap: 'silicone-black' },
@@ -60,7 +98,11 @@ export const InteractiveShowroomSection = () => {
   ];
 
   const handleResetView = () => {
-    setZoomKey((prev) => prev + 1);
+    setIsResetting(true);
+  };
+
+  const handleResetComplete = () => {
+    setIsResetting(false);
   };
 
   return (
@@ -82,7 +124,7 @@ export const InteractiveShowroomSection = () => {
       </div>
 
       {/* Self-Contained Interactive 3D Card Boundary */}
-      <div className="relative max-w-4xl mx-auto h-[480px] sm:h-[560px] bg-zinc-950 border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl group">
+      <div className="relative max-w-4xl mx-auto h-[480px] sm:h-[560px] bg-zinc-950 border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl group touch-none">
         {/* Subtle Ambient Studio Light Glow */}
         <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/10 via-blue-500/5 to-transparent pointer-events-none" />
 
@@ -91,13 +133,13 @@ export const InteractiveShowroomSection = () => {
           <div className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900/90 border border-zinc-800 rounded-xl backdrop-blur-md">
             <Hand className="w-3.5 h-3.5 text-amber-400" />
             <span className="text-[10px] font-mono text-zinc-300 uppercase tracking-widest">
-              Drag to rotate
+              DRAG TO ROTATE
             </span>
           </div>
           <div className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900/90 border border-zinc-800 rounded-xl backdrop-blur-md hidden sm:flex">
             <Eye className="w-3.5 h-3.5 text-zinc-400" />
             <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">
-              Scroll / pinch to zoom
+              SCROLL / PINCH TO ZOOM
             </span>
           </div>
         </div>
@@ -128,11 +170,16 @@ export const InteractiveShowroomSection = () => {
             }
           >
             <Canvas
-              key={zoomKey}
               camera={{ position: [0, 1.8, 5.2], fov: 42 }}
               gl={{ antialias: true, alpha: true }}
             >
-              <ControlledWatchScene finish={selectedFinish} isAutoRotating={isAutoRotating} />
+              <ControlledWatchScene
+                finish={selectedFinish}
+                isAutoRotating={isAutoRotating}
+                isResetting={isResetting}
+                onResetComplete={handleResetComplete}
+                controlsRef={controlsRef}
+              />
             </Canvas>
           </ErrorBoundary>
         </div>
@@ -150,8 +197,8 @@ export const InteractiveShowroomSection = () => {
           <div className="w-px h-4 bg-zinc-800" />
           <button
             onClick={handleResetView}
-            className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition"
-            title="Reset product view"
+            className={`p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition ${isResetting ? 'animate-spin text-amber-400' : ''}`}
+            title="Reset product view orientation"
             aria-label="Reset product view"
           >
             <RotateCcw className="w-4 h-4" />
