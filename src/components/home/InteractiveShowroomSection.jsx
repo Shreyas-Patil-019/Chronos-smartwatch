@@ -176,14 +176,14 @@ export const InteractiveShowroomSection = () => {
         <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/10 via-transparent to-blue-500/5 pointer-events-none" />
 
         {/* Instruction Badges inside Viewer */}
-        <div className="absolute top-4 left-4 z-20 flex items-center gap-2 pointer-events-none">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900/90 border border-zinc-800 rounded-xl backdrop-blur-md">
-            <Hand className="w-3.5 h-3.5 text-amber-400" />
-            <span className="text-[10px] font-mono text-zinc-300 uppercase tracking-widest">
+        <div className="absolute top-3 sm:top-4 left-3 sm:left-4 z-20 flex items-center gap-2 pointer-events-none">
+          <div className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 bg-zinc-900/90 border border-zinc-800 rounded-xl backdrop-blur-md">
+            <Hand className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400" />
+            <span className="text-[9px] sm:text-[10px] font-mono text-zinc-300 uppercase tracking-wider sm:tracking-widest">
               DRAG TO ROTATE
             </span>
           </div>
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900/90 border border-zinc-800 rounded-xl backdrop-blur-md hidden sm:flex">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900/90 border border-zinc-800 rounded-xl backdrop-blur-md hidden md:flex">
             <Eye className="w-3.5 h-3.5 text-zinc-400" />
             <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">
               SCROLL / PINCH TO ZOOM
@@ -192,12 +192,12 @@ export const InteractiveShowroomSection = () => {
         </div>
 
         {/* Material Finish Swatches (Top-Right inside Viewer) */}
-        <div className="absolute top-4 right-4 z-20 flex items-center gap-2 px-3 py-1.5 bg-zinc-900/90 border border-zinc-800 rounded-xl backdrop-blur-md">
+        <div className="absolute top-3 sm:top-4 right-3 sm:right-4 z-20 flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 bg-zinc-900/90 border border-zinc-800 rounded-xl backdrop-blur-md">
           {finishes.map((f) => (
             <button
               key={f.name}
               onClick={() => setSelectedFinish(f)}
-              className={`w-6 h-6 rounded-full border-2 transition-transform cursor-pointer ${
+              className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 transition-transform cursor-pointer ${
                 selectedFinish.name === f.name ? 'border-amber-400 scale-125 shadow-lg' : 'border-zinc-700 hover:scale-110'
               }`}
               style={{ backgroundColor: f.color }}

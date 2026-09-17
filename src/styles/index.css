@@ -20,11 +20,15 @@
 
 html {
   color-scheme: dark;
+  max-width: 100vw;
+  overflow-x: hidden;
+  touch-action: pan-y pinch-zoom;
 }
 
 body {
   margin: 0;
   padding: 0;
+  max-width: 100vw;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
@@ -32,6 +36,10 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+img, canvas, svg {
+  max-width: 100%;
 }
 
 /* Custom Scrollbar */

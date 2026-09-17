@@ -62,7 +62,7 @@ export const HeroSection = ({ onExplore3D }) => {
             initial={{ opacity: 0, y: 35 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight text-white uppercase leading-[0.92] font-mono"
+            className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-white uppercase leading-[0.94] font-mono"
           >
             CHRONOS <br />
             <span className="text-gradient-gold">TIME. REIMAGINED.</span>
@@ -75,7 +75,7 @@ export const HeroSection = ({ onExplore3D }) => {
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="text-base sm:text-xl text-zinc-400 max-w-2xl leading-relaxed font-sans font-normal"
+            className="text-sm sm:text-lg lg:text-xl text-zinc-400 max-w-2xl leading-relaxed font-sans font-normal"
           >
             Technology that keeps up with you. Engineered with aerospace Grade 5 titanium, Sapphire Crystal display, and quantum biometric intelligence.
           </motion.p>
@@ -87,22 +87,23 @@ export const HeroSection = ({ onExplore3D }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-wrap items-center gap-4 pt-2"
+          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2"
         >
-          <Link to="/products">
+          <Link to="/products" className="w-full sm:w-auto">
             <Button
               variant="gold"
               size="lg"
-              className="group relative overflow-hidden flex items-center gap-3 px-8 py-4 bg-amber-400 text-black font-mono font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-amber-300 transition-all duration-300 transform hover:-translate-y-0.5 shadow-xl hover:shadow-amber-500/20 cursor-pointer"
+              style={{ color: '#000000', backgroundColor: '#d4af37' }}
+              className="w-full sm:w-auto group relative overflow-hidden flex items-center justify-center gap-3 px-8 py-4 text-black font-mono font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-amber-300 transition-all duration-300 shadow-xl hover:shadow-amber-500/20 cursor-pointer"
             >
-              <span>EXPLORE COLLECTION</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" />
+              <span style={{ color: '#000000', fontWeight: 800 }}>EXPLORE COLLECTION</span>
+              <ArrowRight className="w-4 h-4 text-black group-hover:translate-x-1.5 transition-transform duration-300" style={{ color: '#000000' }} />
             </Button>
           </Link>
 
           <button
             onClick={() => scrollToSection('3d-showroom')}
-            className="px-7 py-4 bg-zinc-900/80 hover:bg-zinc-800 text-zinc-300 hover:text-white font-mono font-semibold text-xs uppercase tracking-widest rounded-xl border border-zinc-800 hover:border-zinc-600 transition-all duration-300 shadow-md cursor-pointer"
+            className="w-full sm:w-auto px-7 py-4 bg-zinc-900/80 hover:bg-zinc-800 text-zinc-300 hover:text-white font-mono font-semibold text-xs uppercase tracking-widest rounded-xl border border-zinc-800 hover:border-zinc-600 transition-all duration-300 shadow-md cursor-pointer text-center"
           >
             EXPLORE IN 3D
           </button>
@@ -113,19 +114,19 @@ export const HeroSection = ({ onExplore3D }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.45 }}
-          className="pt-8 border-t border-zinc-900/80 grid grid-cols-3 gap-6 max-w-lg"
+          className="pt-6 sm:pt-8 border-t border-zinc-900/80 grid grid-cols-3 gap-3 sm:gap-6 max-w-lg"
         >
           <div>
-            <div className="text-xl font-mono font-extrabold text-white">GRADE 5</div>
-            <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-500">TITANIUM CHASSIS</div>
+            <div className="text-base sm:text-xl font-mono font-extrabold text-white">GRADE 5</div>
+            <div className="text-[9px] sm:text-[10px] font-mono uppercase tracking-widest text-zinc-500">TITANIUM CHASSIS</div>
           </div>
           <div>
-            <div className="text-xl font-mono font-extrabold text-amber-400">100M</div>
-            <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-500">WATER RESISTANCE</div>
+            <div className="text-base sm:text-xl font-mono font-extrabold text-amber-400">100M</div>
+            <div className="text-[9px] sm:text-[10px] font-mono uppercase tracking-widest text-zinc-500">WATER RESISTANCE</div>
           </div>
           <div>
-            <div className="text-xl font-mono font-extrabold text-white">14 DAYS</div>
-            <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-500">BATTERY STAMINA</div>
+            <div className="text-base sm:text-xl font-mono font-extrabold text-white">14 DAYS</div>
+            <div className="text-[9px] sm:text-[10px] font-mono uppercase tracking-widest text-zinc-500">BATTERY STAMINA</div>
           </div>
         </motion.div>
       </motion.div>

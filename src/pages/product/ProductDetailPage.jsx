@@ -240,9 +240,9 @@ export const ProductDetailPage = () => {
 
             {/* Quantity Selector & Action Buttons */}
             <div className="space-y-3 pt-2">
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap sm:flex-nowrap items-center gap-3">
                 {/* Quantity Control */}
-                <div className="flex items-center bg-zinc-900 border border-zinc-800 rounded-xl px-2 py-1">
+                <div className="flex items-center bg-zinc-900 border border-zinc-800 rounded-xl px-2 py-1 shrink-0">
                   <button
                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                     disabled={quantity <= 1}
@@ -251,7 +251,7 @@ export const ProductDetailPage = () => {
                   >
                     -
                   </button>
-                  <span className="w-8 text-center font-mono text-sm font-bold text-white">
+                  <span className="w-8 text-center font-mono text-sm font-bold text-white select-none">
                     {quantity}
                   </span>
                   <button
@@ -268,17 +268,18 @@ export const ProductDetailPage = () => {
                   variant="gold"
                   size="lg"
                   onClick={handleAddToCart}
-                  className="flex-1 font-mono text-xs font-bold uppercase tracking-widest py-4 flex items-center justify-center gap-2 cursor-pointer shadow-xl hover:shadow-amber-500/20"
+                  style={{ color: '#000000', backgroundColor: '#d4af37' }}
+                  className="flex-1 min-w-[170px] font-mono text-xs font-bold uppercase tracking-widest py-4 flex items-center justify-center gap-2 cursor-pointer shadow-xl hover:shadow-amber-500/20"
                 >
                   {addedFeedback ? (
                     <>
-                      <Check className="w-4 h-4 text-black font-extrabold" />
-                      <span className="text-black font-extrabold">Added to Bag!</span>
+                      <Check className="w-4 h-4 text-black font-extrabold" style={{ color: '#000000' }} />
+                      <span style={{ color: '#000000', fontWeight: 800 }}>Added to Bag!</span>
                     </>
                   ) : (
                     <>
-                      <ShoppingBag className="w-4 h-4 text-black" />
-                      <span className="text-black font-extrabold">Add to Bag — {formatCurrency(totalPrice)}</span>
+                      <ShoppingBag className="w-4 h-4 text-black" style={{ color: '#000000' }} />
+                      <span style={{ color: '#000000', fontWeight: 800 }}>Add to Bag — {formatCurrency(totalPrice)}</span>
                     </>
                   )}
                 </Button>
@@ -291,7 +292,7 @@ export const ProductDetailPage = () => {
                     backgroundColor: inWishlist ? 'rgba(24, 24, 27, 0.95)' : 'rgba(24, 24, 27, 0.8)',
                     borderColor: inWishlist ? '#d4af37' : 'rgba(255, 255, 255, 0.1)',
                   }}
-                  className={`p-4 rounded-xl border transition-all duration-300 cursor-pointer ${
+                  className={`p-4 rounded-xl border transition-all duration-300 cursor-pointer shrink-0 ${
                     inWishlist ? 'scale-105 shadow-lg shadow-amber-400/20' : 'hover:border-zinc-700'
                   }`}
                   aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}

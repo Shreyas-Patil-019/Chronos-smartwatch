@@ -42,7 +42,7 @@ export const WatchCustomizer = ({
           </span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
           {colors.map((c) => {
             const isSelected = selectedColor === c.hex || selectedColor === c.id;
             return (
@@ -90,7 +90,7 @@ export const WatchCustomizer = ({
             </span>
           </div>
 
-          <div className="grid grid-cols-3 gap-2.5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
             {watchFaces.map((f) => {
               const isSelected = selectedWatchFace === f.id;
               return (
@@ -104,7 +104,7 @@ export const WatchCustomizer = ({
                       : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
                   }`}
                 >
-                  <div className="text-xs font-mono font-bold uppercase tracking-tight text-white mb-0.5 line-clamp-1">
+                  <div className="text-xs font-mono font-bold uppercase tracking-tight text-white mb-0.5 truncate">
                     {f.name}
                   </div>
                   <span className="text-[9px] font-mono text-amber-400 uppercase tracking-wider block">

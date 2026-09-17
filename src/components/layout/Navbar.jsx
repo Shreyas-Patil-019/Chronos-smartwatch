@@ -154,27 +154,37 @@ export const Navbar = () => {
 
         {/* Mobile Animated Drawer */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-zinc-800/80 bg-zinc-950/95 backdrop-blur-2xl px-6 pt-4 pb-8 space-y-4 animate-fadeIn">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                onClick={() => setMobileMenuOpen(false)}
-                className="block py-2.5 text-sm font-mono tracking-widest uppercase text-zinc-300 hover:text-amber-400 border-b border-zinc-900/80"
-              >
-                {link.name}
-              </Link>
-            ))}
-            <div className="pt-2 flex flex-col gap-3">
+          <div className="md:hidden border-t border-zinc-800/80 bg-zinc-950/98 backdrop-blur-2xl px-6 pt-4 pb-8 space-y-4 animate-fadeIn max-h-[calc(100vh-80px)] overflow-y-auto">
+            <nav className="space-y-1">
+              {NAV_LINKS.map((link) => (
+                <NavLink
+                  key={link.path}
+                  to={link.path}
+                  end={link.path === '/'}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `block py-3 px-3 rounded-xl text-xs font-mono tracking-widest uppercase transition-colors ${
+                      isActive
+                        ? 'bg-zinc-900 text-amber-400 font-bold border-l-2 border-amber-400'
+                        : 'text-zinc-300 hover:text-white hover:bg-zinc-900/50'
+                    }`
+                  }
+                >
+                  {link.name}
+                </NavLink>
+              ))}
+            </nav>
+
+            <div className="pt-3 border-t border-zinc-900 flex flex-col gap-2">
               {isAuthenticated ? (
                 <>
                   <Link
                     to="/account"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 py-2.5 text-xs font-mono text-zinc-300 hover:text-white"
+                    className="flex items-center gap-3 py-3 px-3 rounded-xl text-xs font-mono text-zinc-200 hover:text-white hover:bg-zinc-900/50 transition-colors"
                   >
-                    <User className="w-4 h-4 text-amber-400" />
-                    <span>MY ACCOUNT ({user?.name})</span>
+                    <User className="w-4 h-4 text-amber-400 shrink-0" />
+                    <span className="truncate">ACCOUNT ({user?.name || 'MEMBER'})</span>
                   </Link>
                   <button
                     type="button"
@@ -182,7 +192,7 @@ export const Navbar = () => {
                       logout();
                       setMobileMenuOpen(false);
                     }}
-                    className="flex items-center gap-3 py-2 text-xs font-mono text-rose-400 hover:text-rose-300 text-left cursor-pointer"
+                    className="flex items-center gap-3 py-2.5 px-3 rounded-xl text-xs font-mono text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 text-left transition-colors cursor-pointer"
                   >
                     <span>SIGN OUT</span>
                   </button>
@@ -191,9 +201,9 @@ export const Navbar = () => {
                 <Link
                   to="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 py-2.5 text-xs font-mono text-amber-400 hover:text-white"
+                  className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-mono font-bold uppercase tracking-wider text-black bg-amber-400 hover:bg-amber-300 transition-colors"
                 >
-                  <User className="w-4 h-4 text-amber-400" />
+                  <User className="w-4 h-4 text-black" />
                   <span>SIGN IN / REGISTER</span>
                 </Link>
               )}
