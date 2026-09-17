@@ -125,20 +125,41 @@ export const TechnologyPage = () => {
               return (
                 <button
                   key={module.id}
+                  type="button"
                   onClick={() => setSelectedTech(module.id)}
-                  className={`w-full text-left p-4 rounded-xl border transition-all duration-300 flex items-center justify-between ${
+                  style={{
+                    backgroundColor: isActive ? 'rgba(24, 24, 27, 0.95)' : 'rgba(24, 24, 27, 0.4)',
+                    borderColor: isActive ? '#d4af37' : 'rgba(255, 255, 255, 0.08)',
+                  }}
+                  className={`w-full text-left p-4 rounded-xl border transition-all duration-300 flex items-center justify-between cursor-pointer ${
                     isActive
-                      ? 'bg-zinc-900 border-amber-400 text-white shadow-xl shadow-amber-400/5'
-                      : 'bg-zinc-950 border-zinc-800/80 text-zinc-400 hover:text-white hover:border-zinc-700'
+                      ? 'shadow-xl shadow-amber-400/5'
+                      : 'hover:text-white hover:border-zinc-700'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg ${isActive ? 'bg-amber-400 text-black' : 'bg-zinc-900 text-zinc-400'}`}>
+                    <div
+                      className="p-2 rounded-lg"
+                      style={{
+                        backgroundColor: isActive ? '#d4af37' : '#27272a',
+                        color: isActive ? '#000000' : '#a1a1aa',
+                      }}
+                    >
                       <Icon className="w-4 h-4" />
                     </div>
                     <div>
-                      <div className="text-xs font-mono font-bold uppercase">{module.title}</div>
-                      <div className="text-[10px] font-mono text-zinc-500">{module.subtitle}</div>
+                      <div
+                        className="text-xs font-mono font-bold uppercase"
+                        style={{ color: isActive ? '#ffffff' : '#a1a1aa' }}
+                      >
+                        {module.title}
+                      </div>
+                      <div
+                        className="text-[10px] font-mono"
+                        style={{ color: isActive ? '#d4af37' : '#71717a' }}
+                      >
+                        {module.subtitle}
+                      </div>
                     </div>
                   </div>
                   {isActive && <span className="w-2 h-2 rounded-full bg-amber-400" />}

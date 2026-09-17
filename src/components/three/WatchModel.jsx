@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useEffect, useState, Component } from 'react';
+import React, { useRef, useMemo, useEffect, Component } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
@@ -27,9 +27,10 @@ class GLBErrorBoundary extends Component {
 
 /**
  * GLB Smartwatch Model Loader (Drei useGLTF)
- * Target asset path: /models/smartwatch.glb
+ * Target asset path: /models/chronos-watch.glb
+ * Automatically applies the chosen color to matching case & strap geometries.
  */
-const GLBWatchModel = ({ url = '/models/chronos-watch.glb', color = '#121214', strap = 'silicone-black', ...props }) => {
+const GLBWatchModel = ({ url = '/models/chronos-watch.glb', color = '#121214', ...props }) => {
   const { scene } = useGLTF(url);
   const clonedScene = useMemo(() => scene.clone(true), [scene]);
 
@@ -41,44 +42,33 @@ const GLBWatchModel = ({ url = '/models/chronos-watch.glb', color = '#121214', s
         child.receiveShadow = true;
 
         const name = (child.name || '').toLowerCase();
-        if (name.includes('case') || name.includes('body') || name.includes('chassis')) {
+        if (
+          name.includes('case') ||
+          name.includes('body') ||
+          name.includes('chassis') ||
+          name.includes('strap') ||
+          name.includes('band') ||
+          name.includes('loop')
+        ) {
           if (child.material) {
             child.material = child.material.clone();
             child.material.color = new THREE.Color(color);
             child.material.roughness = 0.25;
             child.material.metalness = 0.85;
           }
-        } else if (name.includes('strap') || name.includes('band') || name.includes('loop')) {
-          if (child.material) {
-            child.material = child.material.clone();
-            const strapColor = strap.includes('leather')
-              ? '#5c2c16'
-              : strap.includes('titanium')
-              ? '#3f3f46'
-              : strap.includes('ocean')
-              ? '#0284c7'
-              : '#18181b';
-            child.material.color = new THREE.Color(strapColor);
-          }
         }
       }
     });
-  }, [clonedScene, color, strap]);
+  }, [clonedScene, color]);
 
   return <primitive object={clonedScene} {...props} />;
 };
 
 /**
  * High-Precision Procedural 3D Smartwatch Geometry Architecture
+ * Strap and case colors are unified to match the chosen user finish.
  */
-const ProceduralWatchModel = ({ color = '#121214', strap = 'silicone-black' }) => {
-  const getStrapColor = () => {
-    if (strap.includes('leather')) return '#5c2c16';
-    if (strap.includes('titanium')) return '#3f3f46';
-    if (strap.includes('ocean')) return '#0284c7';
-    return '#18181b';
-  };
-
+const ProceduralWatchModel = ({ color = '#121214' }) => {
   return (
     <group>
       {/* Main Titanium Chassis Enclosure */}
@@ -142,19 +132,19 @@ const ProceduralWatchModel = ({ color = '#121214', strap = 'silicone-black' }) =
         <meshStandardMaterial color="#09090b" roughness={0.5} metalness={0.5} />
       </mesh>
 
-      {/* Top Ergonomic Strap */}
+      {/* Top Ergonomic Strap — matches chosen color */}
       <group position={[0, 0.15, 1.95]} rotation={[0.22, 0, 0]}>
         <mesh castShadow receiveShadow>
           <boxGeometry args={[1.25, 0.16, 1.7]} />
-          <meshStandardMaterial color={getStrapColor()} roughness={0.7} metalness={0.1} />
+          <meshStandardMaterial color={color} roughness={0.7} metalness={0.1} />
         </mesh>
       </group>
 
-      {/* Bottom Ergonomic Strap */}
+      {/* Bottom Ergonomic Strap — matches chosen color */}
       <group position={[0, 0.15, -1.95]} rotation={[-0.22, 0, 0]}>
         <mesh castShadow receiveShadow>
           <boxGeometry args={[1.25, 0.16, 1.7]} />
-          <meshStandardMaterial color={getStrapColor()} roughness={0.7} metalness={0.1} />
+          <meshStandardMaterial color={color} roughness={0.7} metalness={0.1} />
         </mesh>
       </group>
     </group>
@@ -167,7 +157,6 @@ const ProceduralWatchModel = ({ color = '#121214', strap = 'silicone-black' }) =
  */
 export const WatchModel = ({
   color = '#121214',
-  strap = 'silicone-black',
   enableMouseInteraction = true,
   rotationYOffset = 0,
   rotationXOffset = 0,
@@ -199,8 +188,6 @@ export const WatchModel = ({
         targetX,
         delta * 3
       );
-    } else {
-      groupRef.current.rotation.y += delta * 0.15;
     }
 
     if (innerRef.current) {
@@ -211,8 +198,8 @@ export const WatchModel = ({
   return (
     <group ref={groupRef} scale={[scale, scale, scale]} {...props} dispose={null}>
       <group ref={innerRef}>
-        <GLBErrorBoundary fallback={<ProceduralWatchModel color={color} strap={strap} />}>
-          <GLBWatchModel url={modelUrl} color={color} strap={strap} />
+        <GLBErrorBoundary fallback={<ProceduralWatchModel color={color} />}>
+          <GLBWatchModel url={modelUrl} color={color} />
         </GLBErrorBoundary>
       </group>
     </group>

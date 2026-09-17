@@ -128,20 +128,41 @@ export const TechnologySection = () => {
             return (
               <button
                 key={item.id}
+                type="button"
                 onClick={() => setActiveTab(item.id)}
+                style={{
+                  backgroundColor: isActive ? 'rgba(24, 24, 27, 0.95)' : 'rgba(24, 24, 27, 0.4)',
+                  borderColor: isActive ? '#d4af37' : 'rgba(255, 255, 255, 0.08)',
+                }}
                 className={`w-full text-left p-4 rounded-xl border transition-all duration-300 flex items-center justify-between cursor-pointer ${
                   isActive
-                    ? 'bg-zinc-900 border-amber-400/80 text-white shadow-lg shadow-amber-500/10 scale-[1.02]'
-                    : 'bg-zinc-900/40 border-zinc-800/60 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
+                    ? 'shadow-lg shadow-amber-500/10 scale-[1.02]'
+                    : 'hover:text-zinc-200 hover:border-zinc-700'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className={`p-2.5 rounded-lg transition-colors ${isActive ? 'bg-amber-400 text-black font-bold' : 'bg-zinc-800 text-zinc-400'}`}>
+                  <div
+                    className="p-2.5 rounded-lg transition-colors"
+                    style={{
+                      backgroundColor: isActive ? '#d4af37' : '#27272a',
+                      color: isActive ? '#000000' : '#a1a1aa',
+                    }}
+                  >
                     <Icon className="w-4 h-4" />
                   </div>
                   <div>
-                    <div className="text-xs font-mono font-bold uppercase tracking-wider">{item.label}</div>
-                    <div className="text-[10px] font-mono text-zinc-500">{item.spec}</div>
+                    <div
+                      className="text-xs font-mono font-bold uppercase tracking-wider"
+                      style={{ color: isActive ? '#ffffff' : '#a1a1aa' }}
+                    >
+                      {item.label}
+                    </div>
+                    <div
+                      className="text-[10px] font-mono"
+                      style={{ color: isActive ? '#d4af37' : '#71717a' }}
+                    >
+                      {item.spec}
+                    </div>
                   </div>
                 </div>
                 {isActive && (
