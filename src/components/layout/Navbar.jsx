@@ -4,6 +4,7 @@ import { ShoppingBag, Heart, User, Search, Menu, X, Watch } from 'lucide-react';
 import { BRAND, NAV_LINKS } from '../../utils/constants';
 import { useCart } from '../../hooks/useCart';
 import { useWishlist } from '../../hooks/useWishlist';
+import { useAuth } from '../../hooks/useAuth';
 import SearchBar from '../ui/SearchBar';
 
 export const Navbar = () => {
@@ -13,6 +14,7 @@ export const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const { totalItemCount } = useCart();
   const { wishlistCount } = useWishlist();
+  const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -86,7 +88,7 @@ export const Navbar = () => {
             {/* Search Trigger */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-900/80 rounded-xl transition border border-transparent hover:border-zinc-800"
+              className="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-900/80 rounded-xl transition border border-transparent hover:border-zinc-800 cursor-pointer"
               aria-label="Search Collection"
             >
               <Search className="w-4 h-4" />
@@ -106,14 +108,23 @@ export const Navbar = () => {
               )}
             </Link>
 
-            {/* Account Link */}
+            {/* Account / Login Link */}
             <Link
-              to="/account"
+              to={isAuthenticated ? '/account' : '/login'}
               className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs font-mono text-zinc-300 bg-zinc-900/60 border border-zinc-800 hover:border-zinc-600 hover:text-white rounded-xl transition shadow-sm"
-              aria-label="Account"
+              aria-label={isAuthenticated ? 'Account Dashboard' : 'Sign In'}
             >
-              <User className="w-3.5 h-3.5" />
-              <span>ACCOUNT</span>
+              {isAuthenticated ? (
+                <>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  <span>{user?.name?.split(' ')[0]?.toUpperCase() || 'ACCOUNT'}</span>
+                </>
+              ) : (
+                <>
+                  <User className="w-3.5 h-3.5" />
+                  <span>SIGN IN</span>
+                </>
+              )}
             </Link>
 
             {/* Cart Link */}
@@ -133,7 +144,7 @@ export const Navbar = () => {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-900/80 rounded-xl transition"
+              className="md:hidden p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-900/80 rounded-xl transition cursor-pointer"
               aria-label="Toggle Navigation Menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -155,14 +166,37 @@ export const Navbar = () => {
               </Link>
             ))}
             <div className="pt-2 flex flex-col gap-3">
-              <Link
-                to="/account"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 py-2.5 text-xs font-mono text-zinc-300 hover:text-white"
-              >
-                <User className="w-4 h-4 text-amber-400" />
-                <span>MY ACCOUNT</span>
-              </Link>
+              {isAuthenticated ? (
+                <>
+                  <Link
+                    to="/account"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 py-2.5 text-xs font-mono text-zinc-300 hover:text-white"
+                  >
+                    <User className="w-4 h-4 text-amber-400" />
+                    <span>MY ACCOUNT ({user?.name})</span>
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      logout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="flex items-center gap-3 py-2 text-xs font-mono text-rose-400 hover:text-rose-300 text-left cursor-pointer"
+                  >
+                    <span>SIGN OUT</span>
+                  </button>
+                </>
+              ) : (
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 py-2.5 text-xs font-mono text-amber-400 hover:text-white"
+                >
+                  <User className="w-4 h-4 text-amber-400" />
+                  <span>SIGN IN / REGISTER</span>
+                </Link>
+              )}
             </div>
           </div>
         )}

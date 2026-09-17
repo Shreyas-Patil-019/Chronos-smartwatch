@@ -10,6 +10,8 @@ import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
 import { CustomizerProvider } from './context/CustomizerContext';
 
+import ProtectedRoute from './components/auth/ProtectedRoute';
+
 // Lazy Loaded Pages
 const HomePage = lazy(() => import('./pages/home/HomePage'));
 const TechnologyPage = lazy(() => import('./pages/technology/TechnologyPage'));
@@ -53,7 +55,14 @@ export function App() {
                       <Route path="login" element={<LoginPage />} />
                       <Route path="register" element={<RegisterPage />} />
                       <Route path="forgot-password" element={<ForgotPasswordPage />} />
-                      <Route path="account" element={<AccountPage />} />
+                      <Route
+                        path="account"
+                        element={
+                          <ProtectedRoute>
+                            <AccountPage />
+                          </ProtectedRoute>
+                        }
+                      />
                       <Route path="checkout" element={<CheckoutPage />} />
                       <Route path="order-success" element={<OrderSuccessPage />} />
                       <Route path="about" element={<AboutPage />} />

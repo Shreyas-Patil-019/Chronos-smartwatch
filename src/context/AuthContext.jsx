@@ -1,39 +1,91 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import {
+  loginUser,
+  registerUser,
+  requestPasswordReset as requestResetService,
+  getStoredUser,
+  setStoredUser,
+} from '../services/authService';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => getStoredUser());
   const [isLoading, setIsLoading] = useState(false);
+  const [authError, setAuthError] = useState(null);
+
+  // Sync user changes to safe localStorage storage
+  useEffect(() => {
+    setStoredUser(user);
+  }, [user]);
 
   const login = async (email, password) => {
     setIsLoading(true);
-    // Placeholder login architecture for Phase 1
-    setTimeout(() => {
-      setUser({ id: 'u101', name: 'Chronos Collector', email });
+    setAuthError(null);
+    try {
+      const userProfile = await loginUser({ email, password });
+      setUser(userProfile);
+      return { success: true, user: userProfile };
+    } catch (error) {
+      const message = error?.message || 'Authentication failed. Please check your credentials.';
+      setAuthError(message);
+      throw error;
+    } finally {
       setIsLoading(false);
-    }, 500);
-  };
-
-  const logout = () => {
-    setUser(null);
+    }
   };
 
   const register = async (name, email, password) => {
     setIsLoading(true);
-    setTimeout(() => {
-      setUser({ id: 'u102', name, email });
+    setAuthError(null);
+    try {
+      const userProfile = await registerUser({ name, email, password });
+      setUser(userProfile);
+      return { success: true, user: userProfile };
+    } catch (error) {
+      const message = error?.message || 'Registration failed. Please verify your details.';
+      setAuthError(message);
+      throw error;
+    } finally {
       setIsLoading(false);
-    }, 500);
+    }
+  };
+
+  const requestPasswordReset = async (email) => {
+    setIsLoading(true);
+    setAuthError(null);
+    try {
+      const result = await requestResetService(email);
+      return result;
+    } catch (error) {
+      const message = error?.message || 'Password reset request failed.';
+      setAuthError(message);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const logout = () => {
+    setUser(null);
+    setAuthError(null);
+    setStoredUser(null);
+  };
+
+  const clearAuthError = () => {
+    setAuthError(null);
   };
 
   const value = {
     user,
     isAuthenticated: !!user,
     isLoading,
+    authError,
     login,
-    logout,
     register,
+    requestPasswordReset,
+    logout,
+    clearAuthError,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -46,3 +98,5 @@ export const useAuthContext = () => {
   }
   return context;
 };
+
+export default AuthProvider;
