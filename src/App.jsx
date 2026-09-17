@@ -63,7 +63,14 @@ export function App() {
                           </ProtectedRoute>
                         }
                       />
-                      <Route path="checkout" element={<CheckoutPage />} />
+                      <Route
+                        path="checkout"
+                        element={
+                          <ProtectedRoute>
+                            <CheckoutPage />
+                          </ProtectedRoute>
+                        }
+                      />
                       <Route path="order-success" element={<OrderSuccessPage />} />
                       <Route path="about" element={<AboutPage />} />
                       <Route path="contact" element={<ContactPage />} />

@@ -50,16 +50,17 @@ export const CartSummary = ({ subtotal, totalItemCount = 0 }) => {
         </span>
       </div>
 
-      {/* Primary Checkout CTA (Prepares user for checkout without implementing Phase 10) */}
+      {/* Primary Checkout CTA */}
       <div className="space-y-3 pt-2">
         <Link to="/checkout" className="block w-full">
           <Button
             variant="gold"
             size="lg"
+            style={{ color: '#000000', backgroundColor: '#d4af37' }}
             className="w-full font-mono text-xs uppercase tracking-widest font-bold flex items-center justify-center gap-2 py-4 shadow-xl hover:shadow-amber-500/20 cursor-pointer"
           >
-            <span>Proceed to Checkout</span>
-            <ArrowRight className="w-4 h-4 text-black" />
+            <span style={{ color: '#000000', fontWeight: 800 }}>Proceed to Checkout</span>
+            <ArrowRight className="w-4 h-4 text-black" style={{ color: '#000000' }} />
           </Button>
         </Link>
 

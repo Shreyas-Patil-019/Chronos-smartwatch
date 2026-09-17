@@ -18,6 +18,8 @@ import {
 import { useAuth } from '../../hooks/useAuth';
 import { useWishlist } from '../../hooks/useWishlist';
 import { useCart } from '../../hooks/useCart';
+import { getUserOrders } from '../../services/orderService';
+import { formatCurrency } from '../../utils/formatters';
 import Button from '../../components/ui/Button';
 
 const fadeInUp = {
@@ -40,6 +42,8 @@ export const AccountPage = () => {
   const navigate = useNavigate();
   const shouldReduceMotion = useReducedMotion();
   const [activeTab, setActiveTab] = useState('profile');
+
+  const userOrders = getUserOrders(user?.email || user?.id);
 
   const handleLogout = () => {
     logout();
@@ -299,26 +303,112 @@ export const AccountPage = () => {
           )}
 
           {activeTab === 'orders' && (
-            <div className="p-12 bg-zinc-950/80 border border-zinc-800 rounded-3xl text-center space-y-6">
-              <Clock className="w-12 h-12 text-zinc-600 mx-auto" />
-              <div className="space-y-2 max-w-md mx-auto">
-                <h4 className="text-sm font-mono font-bold text-white uppercase tracking-widest">No Active Orders Yet</h4>
-                <p className="text-xs text-zinc-400 font-sans leading-relaxed tracking-normal">
-                  Your customized timepieces and accessories will appear here once orders are confirmed during checkout.
-                </p>
-              </div>
-              <div className="pt-3">
-                <Link to="/products">
-                  <Button
-                    variant="gold"
-                    size="md"
-                    style={{ color: '#000000', backgroundColor: '#d4af37' }}
-                    className="font-mono text-xs uppercase tracking-widest font-bold px-6 py-3"
-                  >
-                    <span style={{ color: '#000000', fontWeight: 800 }}>Explore Collection</span>
-                  </Button>
-                </Link>
-              </div>
+            <div className="space-y-6">
+              {userOrders.length > 0 ? (
+                <div className="space-y-4">
+                  {userOrders.map((order) => {
+                    const formattedOrderDate = order.createdAt
+                      ? new Date(order.createdAt).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric',
+                        })
+                      : 'Recent';
+
+                    return (
+                      <div
+                        key={order.orderId}
+                        className="p-6 sm:p-8 bg-zinc-950/80 border border-zinc-800 rounded-3xl space-y-5 shadow-xl backdrop-blur-xl"
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800/80">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-mono font-bold text-white tracking-wider">
+                                ORDER #{order.orderId}
+                              </span>
+                              <span className="px-2.5 py-0.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-mono rounded-md font-bold">
+                                {order.status}
+                              </span>
+                            </div>
+                            <span className="text-[11px] font-mono text-zinc-500 block">
+                              Placed on {formattedOrderDate} // {order.items?.length || 1} Timepiece{(order.items?.length || 1) > 1 ? 's' : ''}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-4">
+                            <div className="text-left sm:text-right">
+                              <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 block">Total</span>
+                              <span className="text-base font-mono font-black text-amber-400">
+                                {formatCurrency(order.total || 0)}
+                              </span>
+                            </div>
+
+                            <Link to={`/order-success?orderId=${order.orderId}`}>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="font-mono text-xs uppercase tracking-wider font-bold"
+                              >
+                                View Allocation Receipt
+                              </Button>
+                            </Link>
+                          </div>
+                        </div>
+
+                        {/* Order Items Preview */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                          {order.items?.map((it, idx) => (
+                            <div
+                              key={it.key || idx}
+                              className="p-3 bg-zinc-900/60 border border-zinc-800/80 rounded-2xl flex items-center gap-3"
+                            >
+                              <div className="w-12 h-12 rounded-xl bg-zinc-950 border border-zinc-800 flex items-center justify-center p-1 shrink-0">
+                                <img
+                                  src={it.image || '/assets/chronos-pro-main.jpg'}
+                                  alt={it.name}
+                                  className="w-full h-full object-contain filter drop-shadow"
+                                />
+                              </div>
+                              <div className="space-y-0.5 min-w-0 flex-1">
+                                <h5 className="text-xs font-mono font-bold text-white uppercase truncate">
+                                  {it.name}
+                                </h5>
+                                <div className="flex items-center gap-2 text-[10px] font-mono text-zinc-400">
+                                  <span>Qty: {it.quantity}</span>
+                                  <span>•</span>
+                                  <span>{formatCurrency(it.price || 0)}</span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="p-12 bg-zinc-950/80 border border-zinc-800 rounded-3xl text-center space-y-6">
+                  <Clock className="w-12 h-12 text-zinc-600 mx-auto" />
+                  <div className="space-y-2 max-w-md mx-auto">
+                    <h4 className="text-sm font-mono font-bold text-white uppercase tracking-widest">No Active Orders Yet</h4>
+                    <p className="text-xs text-zinc-400 font-sans leading-relaxed tracking-normal">
+                      Your customized timepieces and accessories will appear here once orders are confirmed during checkout.
+                    </p>
+                  </div>
+                  <div className="pt-3">
+                    <Link to="/products">
+                      <Button
+                        variant="gold"
+                        size="md"
+                        style={{ color: '#000000', backgroundColor: '#d4af37' }}
+                        className="font-mono text-xs uppercase tracking-widest font-bold px-6 py-3"
+                      >
+                        <span style={{ color: '#000000', fontWeight: 800 }}>Explore Collection</span>
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
