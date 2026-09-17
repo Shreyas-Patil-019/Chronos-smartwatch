@@ -106,33 +106,33 @@ export const ProductsPage = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="p-4 sm:p-6 bg-zinc-950/80 border border-zinc-800/80 rounded-3xl backdrop-blur-md space-y-4 shadow-xl"
         >
-          <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
             {/* Category Filter Tabs */}
-            <div className="flex-1 overflow-x-auto">
+            <div className="w-full lg:w-auto">
               <ProductFilters
                 selectedCategory={selectedCategory}
                 onSelectCategory={setSelectedCategory}
               />
             </div>
 
-            {/* Search and Sort Controls */}
-            <div className="flex flex-wrap sm:flex-nowrap items-center gap-3">
+            {/* Search and Sort Controls - Compact */}
+            <div className="flex items-center gap-2.5 w-full sm:w-auto shrink-0">
               {/* Search Bar */}
-              <div className="w-full sm:w-64">
+              <div className="flex-1 sm:w-48 sm:flex-initial">
                 <SearchBar
                   value={searchQuery}
                   onChange={setSearchQuery}
-                  placeholder="Search models, specs..."
+                  placeholder="Search models..."
                 />
               </div>
 
               {/* Sort Dropdown */}
-              <div className="relative flex items-center bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-xl px-3 py-2.5 transition">
-                <ArrowUpDown className="w-3.5 h-3.5 text-zinc-400 mr-2 shrink-0" />
+              <div className="relative flex items-center bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-xl px-2.5 py-2 transition shrink-0">
+                <ArrowUpDown className="w-3.5 h-3.5 text-zinc-400 mr-1.5 shrink-0" />
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="bg-transparent text-xs font-mono text-zinc-300 focus:outline-none cursor-pointer pr-4"
+                  className="bg-transparent text-xs font-mono text-zinc-300 focus:outline-none cursor-pointer pr-3"
                   aria-label="Sort collection by"
                 >
                   <option value="featured" className="bg-zinc-900 text-white">Featured</option>

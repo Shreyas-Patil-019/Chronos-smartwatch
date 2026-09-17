@@ -36,25 +36,53 @@ const GLBWatchModel = ({ url = '/models/chronos-watch.glb', color = '#121214', .
 
   useEffect(() => {
     if (!clonedScene) return;
+    const targetColor = new THREE.Color(color);
+
     clonedScene.traverse((child) => {
-      if (child.isMesh) {
+      if (child.isMesh && child.material) {
         child.castShadow = true;
         child.receiveShadow = true;
 
         const name = (child.name || '').toLowerCase();
-        if (
+        const matName = (child.material?.name || '').toLowerCase();
+
+        const isStrap =
+          name.includes('strap') ||
+          name.includes('band') ||
+          name.includes('loop') ||
+          name.includes('wrist') ||
+          matName.includes('strap');
+
+        const isCase =
           name.includes('case') ||
           name.includes('body') ||
           name.includes('chassis') ||
-          name.includes('strap') ||
-          name.includes('band') ||
-          name.includes('loop')
-        ) {
-          if (child.material) {
+          name.includes('lug') ||
+          name.includes('crown') ||
+          name.includes('buckle') ||
+          matName.includes('case') ||
+          matName.includes('titanium');
+
+        if (isStrap || isCase) {
+          const updateMat = (mat) => {
+            if (!mat) return;
+            mat.color.copy(targetColor);
+            if (isStrap) {
+              mat.roughness = 0.75;
+              mat.metalness = 0.05;
+            } else {
+              mat.roughness = 0.25;
+              mat.metalness = 0.85;
+            }
+            mat.needsUpdate = true;
+          };
+
+          if (Array.isArray(child.material)) {
+            child.material = child.material.map((m) => m.clone());
+            child.material.forEach(updateMat);
+          } else {
             child.material = child.material.clone();
-            child.material.color = new THREE.Color(color);
-            child.material.roughness = 0.25;
-            child.material.metalness = 0.85;
+            updateMat(child.material);
           }
         }
       }
