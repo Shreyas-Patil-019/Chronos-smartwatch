@@ -5,7 +5,6 @@ import { Star, Heart, ArrowRight, ShieldCheck, ShoppingBag } from 'lucide-react'
 import { formatCurrency, formatRating } from '../../utils/formatters';
 import { useCart } from '../../hooks/useCart';
 import { useWishlist } from '../../hooks/useWishlist';
-import WatchScene from '../three/WatchScene';
 
 export const ProductCard = ({ product }) => {
   const { addItem } = useCart();
@@ -77,46 +76,35 @@ export const ProductCard = ({ product }) => {
             />
           </button>
 
-          {/* 3D Model Preview for Chronos Pro / Models with fallback */}
-          {product.slug === 'chronos-pro' || product.model ? (
-            <div className="w-full h-full relative cursor-grab active:cursor-grabbing">
-              <WatchScene
-                color={product.colors?.[0]?.hex || '#121214'}
-                autoRotate={true}
-                enableMouseInteraction={false}
-                className="w-full h-full"
-              />
-            </div>
-          ) : (
-            <Link to={`/products/${product.slug}`} className="w-full h-full flex items-center justify-center relative">
-              {!imgError ? (
-                <>
+          {/* Product Image / Render Presentation */}
+          <Link to={`/products/${product.slug}`} className="w-full h-full flex items-center justify-center relative">
+            {!imgError ? (
+              <>
+                <img
+                  src={mainImage}
+                  alt={product.name}
+                  loading="lazy"
+                  onError={() => setImgError(true)}
+                  className={`w-full h-full object-contain filter drop-shadow-2xl transition-all duration-700 ease-out transform group-hover:scale-105 ${
+                    hoverImage ? 'group-hover:opacity-0' : ''
+                  }`}
+                />
+                {hoverImage && (
                   <img
-                    src={mainImage}
-                    alt={product.name}
+                    src={hoverImage}
+                    alt={`${product.name} alternate angle`}
                     loading="lazy"
-                    onError={() => setImgError(true)}
-                    className={`w-full h-full object-contain filter drop-shadow-2xl transition-all duration-700 ease-out transform group-hover:scale-105 ${
-                      hoverImage ? 'group-hover:opacity-0' : ''
-                    }`}
+                    className="absolute inset-0 w-full h-full object-contain filter drop-shadow-2xl transition-all duration-700 ease-out opacity-0 group-hover:opacity-100 transform group-hover:scale-105"
                   />
-                  {hoverImage && (
-                    <img
-                      src={hoverImage}
-                      alt={`${product.name} alternate angle`}
-                      loading="lazy"
-                      className="absolute inset-0 w-full h-full object-contain filter drop-shadow-2xl transition-all duration-700 ease-out opacity-0 group-hover:opacity-100 transform group-hover:scale-105"
-                    />
-                  )}
-                </>
-              ) : (
-                <div className="flex flex-col items-center justify-center text-zinc-500 space-y-1">
-                  <ShieldCheck className="w-8 h-8 text-amber-400/60" />
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-400">{product.name}</span>
-                </div>
-              )}
-            </Link>
-          )}
+                )}
+              </>
+            ) : (
+              <div className="flex flex-col items-center justify-center text-zinc-500 space-y-1">
+                <ShieldCheck className="w-8 h-8 text-amber-400/60" />
+                <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-400">{product.name}</span>
+              </div>
+            )}
+          </Link>
         </div>
 
         {/* Product Details Section */}

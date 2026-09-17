@@ -95,13 +95,14 @@ const GLBWatchModel = ({ url = '/models/chronos-watch.glb', color = '#121214', .
 /**
  * High-Precision Procedural 3D Smartwatch Geometry Architecture
  * Strap and case colors are unified to match the chosen user finish.
+ * Optimized geometry segment counts for 60fps rendering on low-end hardware.
  */
 const ProceduralWatchModel = ({ color = '#121214' }) => {
   return (
     <group>
       {/* Main Titanium Chassis Enclosure */}
       <mesh position={[0, 0, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[1.5, 1.5, 0.42, 64]} />
+        <cylinderGeometry args={[1.5, 1.5, 0.42, 36]} />
         <meshStandardMaterial
           color={color}
           roughness={0.25}
@@ -112,13 +113,13 @@ const ProceduralWatchModel = ({ color = '#121214' }) => {
 
       {/* Chamfered Outer Bezel Ring */}
       <mesh position={[0, 0.21, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[1.52, 1.48, 0.05, 64]} />
+        <cylinderGeometry args={[1.52, 1.48, 0.05, 36]} />
         <meshStandardMaterial color="#27272a" roughness={0.3} metalness={0.9} />
       </mesh>
 
       {/* AMOLED Screen Glass Face */}
       <mesh position={[0, 0.23, 0]} castShadow>
-        <cylinderGeometry args={[1.38, 1.38, 0.02, 64]} />
+        <cylinderGeometry args={[1.38, 1.38, 0.02, 36]} />
         <meshPhysicalMaterial
           color="#09090b"
           roughness={0.08}
@@ -139,11 +140,11 @@ const ProceduralWatchModel = ({ color = '#121214' }) => {
       {/* Tactical Crown Dial (Right side) */}
       <group position={[1.55, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
         <mesh castShadow>
-          <cylinderGeometry args={[0.22, 0.22, 0.32, 32]} />
+          <cylinderGeometry args={[0.22, 0.22, 0.32, 20]} />
           <meshStandardMaterial color={color} roughness={0.2} metalness={0.9} />
         </mesh>
         <mesh position={[0, 0.17, 0]}>
-          <cylinderGeometry args={[0.18, 0.18, 0.04, 32]} />
+          <cylinderGeometry args={[0.18, 0.18, 0.04, 20]} />
           <meshStandardMaterial color="#d4af37" roughness={0.3} metalness={0.8} />
         </mesh>
       </group>
@@ -156,7 +157,7 @@ const ProceduralWatchModel = ({ color = '#121214' }) => {
 
       {/* Sensor Housing Base (Underneath) */}
       <mesh position={[0, -0.22, 0]} castShadow>
-        <cylinderGeometry args={[1.2, 1.2, 0.08, 32]} />
+        <cylinderGeometry args={[1.2, 1.2, 0.08, 24]} />
         <meshStandardMaterial color="#09090b" roughness={0.5} metalness={0.5} />
       </mesh>
 

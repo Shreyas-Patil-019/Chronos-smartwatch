@@ -218,7 +218,15 @@ export const InteractiveShowroomSection = () => {
           >
             <Canvas
               camera={{ position: [0, 1.8, 5.2], fov: 42 }}
-              gl={{ antialias: true, alpha: true }}
+              dpr={typeof window !== 'undefined' ? [1, Math.min(window.devicePixelRatio || 1, 1.5)] : 1}
+              gl={{
+                antialias: true,
+                alpha: true,
+                powerPreference: 'high-performance',
+                precision: 'mediump',
+                stencil: false,
+                depth: true,
+              }}
             >
               <ControlledWatchScene
                 finish={selectedFinish}

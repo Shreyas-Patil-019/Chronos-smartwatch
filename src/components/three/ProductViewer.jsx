@@ -36,11 +36,11 @@ export const ProductViewer = ({
       setHasWebGL(false);
     }
 
-    // Low-end device DPR optimization
+    // Low-end device & integrated GPU DPR optimization
     if (typeof window !== 'undefined') {
       const isMobileOrLowEnd =
         window.innerWidth < 768 || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
-      setDpr(isMobileOrLowEnd ? 1 : Math.min(window.devicePixelRatio || 1.5, 2));
+      setDpr(isMobileOrLowEnd ? 1 : Math.min(window.devicePixelRatio || 1.25, 1.5));
     }
   }, []);
 

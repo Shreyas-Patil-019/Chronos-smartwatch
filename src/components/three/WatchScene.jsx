@@ -70,7 +70,7 @@ export const WatchScene = ({
   autoRotate = false,
   enableMouseInteraction = false,
   scale = 1,
-  dpr = 1.5,
+  dpr = null,
   modelUrl = '/models/chronos-watch.glb',
   className = 'w-full h-full',
   isResetting = false,
@@ -79,6 +79,9 @@ export const WatchScene = ({
 }) => {
   const internalControlsRef = useRef();
   const activeControlsRef = controlsRef || internalControlsRef;
+
+  // Responsive device pixel ratio capping for low-end laptops & mobile
+  const effectiveDpr = dpr !== null ? dpr : (typeof window !== 'undefined' ? [1, Math.min(window.devicePixelRatio || 1, 1.5)] : 1);
 
   return (
     <div className={`relative touch-none ${className}`}>
@@ -91,9 +94,20 @@ export const WatchScene = ({
       >
         <Canvas
           camera={{ position: [0, 1.8, 5.2], fov: 42 }}
-          dpr={dpr}
-          shadows
-          gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+          dpr={effectiveDpr}
+          shadows={{ type: THREE.PCFShadowMap }}
+          gl={{
+            antialias: true,
+            alpha: true,
+            powerPreference: 'high-performance',
+            precision: 'mediump',
+            stencil: false,
+            depth: true,
+          }}
+          onCreated={({ gl }) => {
+            gl.toneMapping = THREE.ACESFilmicToneMapping;
+            gl.toneMappingExposure = 1.05;
+          }}
         >
           <Suspense fallback={<CanvasLoader />}>
             <WatchLighting />
