@@ -47,8 +47,8 @@ export const LoginPage = () => {
     try {
       await login(cleanEmail, password);
       navigate(redirectPath, { replace: true });
-    } catch (err) {
-      // Error handled by AuthContext
+    } catch {
+      // Error state handled by AuthContext
     }
   };
 

@@ -226,7 +226,7 @@ export const CheckoutPage = () => {
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4 }}
+          transition={{ duration: shouldReduceMotion ? 0 : 0.4 }}
           className="p-10 sm:p-14 bg-zinc-950/90 border border-zinc-800 rounded-3xl text-center space-y-6 max-w-lg mx-auto shadow-2xl backdrop-blur-xl relative z-10"
         >
           <div className="w-20 h-20 bg-zinc-900 border border-zinc-800 rounded-2xl flex items-center justify-center mx-auto text-amber-400 shadow-inner">

@@ -20,12 +20,12 @@ for block in bpy.data.collections:
 # ----------------------------------------------------
 
 # Case Titanium Material
-mat_case = bpy.data.materials.new(name="Mat_TitaniumCase")
+mat_case = bpy.data.materials.new(name="Case")
 mat_case.use_nodes = True
 bsdf_case = mat_case.node_tree.nodes.get("Principled BSDF")
-bsdf_case.inputs["Base Color"].default_value = (0.07, 0.07, 0.08, 1.0)
-bsdf_case.inputs["Metallic"].default_value = 0.9
-bsdf_case.inputs["Roughness"].default_value = 0.22
+bsdf_case.inputs["Base Color"].default_value = (1.0, 1.0, 1.0, 1.0)
+bsdf_case.inputs["Metallic"].default_value = 0.85
+bsdf_case.inputs["Roughness"].default_value = 0.25
 
 # Ceramic Bezel Outer & Inner Material
 mat_bezel = bpy.data.materials.new(name="Mat_CeramicBezel")
@@ -65,10 +65,10 @@ bsdf_gold.inputs["Metallic"].default_value = 0.95
 bsdf_gold.inputs["Roughness"].default_value = 0.18
 
 # Fluoroelastomer Rubber Strap Material
-mat_strap = bpy.data.materials.new(name="Mat_Strap")
+mat_strap = bpy.data.materials.new(name="Strap")
 mat_strap.use_nodes = True
 bsdf_strap = mat_strap.node_tree.nodes.get("Principled BSDF")
-bsdf_strap.inputs["Base Color"].default_value = (0.05, 0.05, 0.06, 1.0)
+bsdf_strap.inputs["Base Color"].default_value = (1.0, 1.0, 1.0, 1.0)
 bsdf_strap.inputs["Roughness"].default_value = 0.75
 bsdf_strap.inputs["Metallic"].default_value = 0.05
 

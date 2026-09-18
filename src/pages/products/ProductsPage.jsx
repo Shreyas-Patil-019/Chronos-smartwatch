@@ -7,24 +7,25 @@ import SearchBar from '../../components/ui/SearchBar';
 import { products } from '../../data/products';
 import { Sparkles, ArrowUpDown, ShieldCheck, Truck, RotateCcw, Headphones } from 'lucide-react';
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 25 },
+const getFadeInUp = (shouldReduce) => ({
+  hidden: { opacity: 0, y: shouldReduce ? 0 : 25 },
   visible: (custom = 0) => ({
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.6,
+      duration: shouldReduce ? 0 : 0.6,
       ease: [0.16, 1, 0.3, 1],
-      delay: custom * 0.1,
+      delay: shouldReduce ? 0 : custom * 0.1,
     },
   }),
-};
+});
 
 export const ProductsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('featured');
   const shouldReduceMotion = useReducedMotion();
+  const fadeInUp = getFadeInUp(shouldReduceMotion);
 
   usePageSEO({
     title: 'CHRONOS — Smartwatch Collection',

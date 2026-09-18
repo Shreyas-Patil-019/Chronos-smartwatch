@@ -1,29 +1,30 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ShoppingBag, ArrowLeft, Trash2, Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
+import { ShoppingBag, ArrowLeft, Trash2, Sparkles } from 'lucide-react';
 import usePageSEO from '../../hooks/usePageSEO';
 import { useCart } from '../../hooks/useCart';
 import CartItem from '../../components/cart/CartItem';
 import CartSummary from '../../components/cart/CartSummary';
 import Button from '../../components/ui/Button';
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 25 },
+const getFadeInUp = (shouldReduce) => ({
+  hidden: { opacity: 0, y: shouldReduce ? 0 : 25 },
   visible: (custom = 0) => ({
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.6,
+      duration: shouldReduce ? 0 : 0.6,
       ease: [0.16, 1, 0.3, 1],
-      delay: custom * 0.1,
+      delay: shouldReduce ? 0 : custom * 0.1,
     },
   }),
-};
+});
 
 export const CartPage = () => {
   const { cartItems, updateQuantity, removeItem, clearCart, cartSubtotal, totalItemCount } = useCart();
   const shouldReduceMotion = useReducedMotion();
+  const fadeInUp = getFadeInUp(shouldReduceMotion);
 
   usePageSEO({
     title: 'CHRONOS — Your Shopping Bag',

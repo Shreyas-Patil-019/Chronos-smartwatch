@@ -2,22 +2,23 @@ import React, { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Layers, Activity, Sliders, Radio, Shield, Sparkles } from 'lucide-react';
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 35 },
+const getFadeInUp = (shouldReduce) => ({
+  hidden: { opacity: 0, y: shouldReduce ? 0 : 35 },
   visible: (custom = 0) => ({
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.7,
+      duration: shouldReduce ? 0 : 0.7,
       ease: [0.16, 1, 0.3, 1],
-      delay: custom * 0.1,
+      delay: shouldReduce ? 0 : custom * 0.1,
     },
   }),
-};
+});
 
 export const TechnologySection = () => {
   const [activeTab, setActiveTab] = useState('sensors');
   const shouldReduceMotion = useReducedMotion();
+  const fadeInUp = getFadeInUp(shouldReduceMotion);
 
   const annotations = [
     {
@@ -122,7 +123,7 @@ export const TechnologySection = () => {
           <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-zinc-500 block mb-2 font-bold">
             SELECT ARCHITECTURE MODULE
           </span>
-          {annotations.map((item, idx) => {
+          {annotations.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
             return (

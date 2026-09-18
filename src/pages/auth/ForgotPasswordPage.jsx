@@ -37,7 +37,7 @@ export const ForgotPasswordPage = () => {
     try {
       const res = await requestPasswordReset(cleanEmail);
       setSuccessInfo(res.message || `Password reset instructions have been prepared for ${cleanEmail}.`);
-    } catch (err) {
+    } catch {
       // Handled in AuthContext
     }
   };

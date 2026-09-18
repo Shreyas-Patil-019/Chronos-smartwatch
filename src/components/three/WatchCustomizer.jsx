@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, Sparkles, Palette } from 'lucide-react';
+import { Check, Palette } from 'lucide-react';
 
 /**
  * WatchCustomizer — Premium 3D Smartwatch Customization Control Panel

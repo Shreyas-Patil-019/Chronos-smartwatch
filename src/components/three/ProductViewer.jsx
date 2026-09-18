@@ -36,7 +36,7 @@ export const ProductViewer = ({
       if (!gl) {
         setHasWebGL(false);
       }
-    } catch (e) {
+    } catch {
       setHasWebGL(false);
     }
 

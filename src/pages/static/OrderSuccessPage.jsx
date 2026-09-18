@@ -7,12 +7,9 @@ import {
   Package,
   Truck,
   ArrowRight,
-  ShieldCheck,
   Sparkles,
   ShoppingBag,
   MapPin,
-  Clock,
-  User,
 } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatters';
 import { getOrderById, getLatestOrder } from '../../services/orderService';

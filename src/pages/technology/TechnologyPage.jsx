@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Cpu, Radio, Battery, Compass, ShieldCheck, Layers, Activity, Smartphone, HeartPulse } from 'lucide-react';
+import { Cpu, Radio, Battery, Compass, ShieldCheck, HeartPulse } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import usePageSEO from '../../hooks/usePageSEO';
 

@@ -28,7 +28,7 @@ class GLBErrorBoundary extends Component {
 /**
  * GLB Smartwatch Model Loader (Drei useGLTF)
  * Target asset path: /models/chronos-watch.glb
- * Automatically applies the chosen color to matching case & strap geometries.
+ * Dynamically applies the chosen color to both Case and Strap materials and geometries.
  */
 const GLBWatchModel = ({ url = '/models/chronos-watch.glb', color = '#121214', ...props }) => {
   const { scene } = useGLTF(url);
@@ -43,47 +43,68 @@ const GLBWatchModel = ({ url = '/models/chronos-watch.glb', color = '#121214', .
         child.castShadow = true;
         child.receiveShadow = true;
 
-        const name = (child.name || '').toLowerCase();
-        const matName = (child.material?.name || '').toLowerCase();
+        const nodeName = (child.name || '').toLowerCase();
+        const parentName = (child.parent?.name || '').toLowerCase();
 
-        const isStrap =
-          name.includes('strap') ||
-          name.includes('band') ||
-          name.includes('loop') ||
-          name.includes('wrist') ||
-          matName.includes('strap');
+        const updateMat = (mat) => {
+          if (!mat) return;
+          const matName = (mat.name || '').toLowerCase();
 
-        const isCase =
-          name.includes('case') ||
-          name.includes('body') ||
-          name.includes('chassis') ||
-          name.includes('lug') ||
-          name.includes('crown') ||
-          name.includes('buckle') ||
-          matName.includes('case') ||
-          matName.includes('titanium');
+          const isStrap =
+            matName === 'strap' ||
+            matName.includes('strap') ||
+            matName.includes('band') ||
+            matName.includes('wrist') ||
+            nodeName.includes('strap') ||
+            nodeName.includes('band') ||
+            nodeName.includes('loop') ||
+            nodeName.includes('wrist') ||
+            parentName.includes('strap') ||
+            parentName.includes('band') ||
+            parentName.includes('loop') ||
+            parentName.includes('wrist');
 
-        if (isStrap || isCase) {
-          const updateMat = (mat) => {
-            if (!mat) return;
+          const isCase =
+            matName === 'case' ||
+            matName.includes('case') ||
+            matName.includes('titanium') ||
+            nodeName.includes('case') ||
+            nodeName.includes('body') ||
+            nodeName.includes('chassis') ||
+            nodeName.includes('lug') ||
+            nodeName.includes('crown') ||
+            nodeName.includes('buckle') ||
+            parentName.includes('case') ||
+            parentName.includes('body') ||
+            parentName.includes('chassis') ||
+            parentName.includes('lug') ||
+            parentName.includes('crown') ||
+            parentName.includes('buckle');
+
+          if (isStrap) {
             mat.color.copy(targetColor);
-            if (isStrap) {
-              mat.roughness = 0.75;
-              mat.metalness = 0.05;
-            } else {
-              mat.roughness = 0.25;
-              mat.metalness = 0.85;
-            }
+            mat.roughness = 0.65;
+            mat.metalness = 0.08;
             mat.needsUpdate = true;
-          };
-
-          if (Array.isArray(child.material)) {
-            child.material = child.material.map((m) => m.clone());
-            child.material.forEach(updateMat);
-          } else {
-            child.material = child.material.clone();
-            updateMat(child.material);
+          } else if (isCase) {
+            mat.color.copy(targetColor);
+            if (mat.map) {
+              mat.emissive = new THREE.Color(0xffffff);
+              mat.emissiveMap = mat.map;
+              mat.emissiveIntensity = 0.9; // Bright, crystal-clear OLED display!
+            }
+            mat.roughness = 0.28;
+            mat.metalness = 0.88;
+            mat.needsUpdate = true;
           }
+        };
+
+        if (Array.isArray(child.material)) {
+          child.material = child.material.map((m) => m.clone());
+          child.material.forEach(updateMat);
+        } else {
+          child.material = child.material.clone();
+          updateMat(child.material);
         }
       }
     });

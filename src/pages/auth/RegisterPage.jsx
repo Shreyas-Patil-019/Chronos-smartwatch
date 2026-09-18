@@ -65,7 +65,7 @@ export const RegisterPage = () => {
     try {
       await register(cleanName, cleanEmail, password);
       navigate('/account', { replace: true });
-    } catch (err) {
+    } catch {
       // Error handled in AuthContext
     }
   };

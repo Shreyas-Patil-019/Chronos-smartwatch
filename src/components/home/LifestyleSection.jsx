@@ -3,22 +3,23 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { Activity, Globe, Coffee, Briefcase, ArrowUpRight, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 35 },
+const getFadeInUp = (shouldReduce) => ({
+  hidden: { opacity: 0, y: shouldReduce ? 0 : 35 },
   visible: (custom = 0) => ({
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.7,
+      duration: shouldReduce ? 0 : 0.7,
       ease: [0.16, 1, 0.3, 1],
-      delay: custom * 0.1,
+      delay: shouldReduce ? 0 : custom * 0.1,
     },
   }),
-};
+});
 
 export const LifestyleSection = () => {
   const [activeMode, setActiveMode] = useState('FITNESS');
   const shouldReduceMotion = useReducedMotion();
+  const fadeInUp = getFadeInUp(shouldReduceMotion);
 
   const modes = [
     {

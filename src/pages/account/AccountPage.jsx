@@ -11,7 +11,6 @@ import {
   Sparkles,
   Watch,
   Headphones,
-  Award,
   ArrowRight,
   Clock,
   Key,
@@ -23,25 +22,12 @@ import { getUserOrders } from '../../services/orderService';
 import { formatCurrency } from '../../utils/formatters';
 import Button from '../../components/ui/Button';
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 25 },
-  visible: (custom = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: [0.16, 1, 0.3, 1],
-      delay: custom * 0.1,
-    },
-  }),
-};
-
 export const AccountPage = () => {
   const { user, logout } = useAuth();
   const { wishlistCount } = useWishlist();
   const { totalItemCount } = useCart();
   const navigate = useNavigate();
-  const shouldReduceMotion = useReducedMotion();
+  const _shouldReduceMotion = useReducedMotion();
   const [activeTab, setActiveTab] = useState('profile');
 
   usePageSEO({

@@ -1,11 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShieldCheck, Truck, RotateCcw, ArrowRight, ShoppingBag } from 'lucide-react';
+import { ShieldCheck, Truck, RotateCcw, ArrowRight } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatters';
 import Button from '../ui/Button';
 
 export const CartSummary = ({ subtotal, totalItemCount = 0 }) => {
-  const estimatedShipping = 0; // Complimentary global express delivery for CHRONOS
   const grandTotal = subtotal;
 
   return (

@@ -102,7 +102,13 @@ export const HeroSection = ({ onExplore3D }) => {
           </Link>
 
           <button
-            onClick={() => scrollToSection('3d-showroom')}
+            onClick={() => {
+              if (onExplore3D) {
+                onExplore3D();
+              } else {
+                scrollToSection('3d-showroom');
+              }
+            }}
             className="w-full sm:w-auto px-7 py-4 bg-zinc-900/80 hover:bg-zinc-800 text-zinc-300 hover:text-white font-mono font-semibold text-xs uppercase tracking-widest rounded-xl border border-zinc-800 hover:border-zinc-600 transition-all duration-300 shadow-md cursor-pointer text-center"
           >
             EXPLORE IN 3D

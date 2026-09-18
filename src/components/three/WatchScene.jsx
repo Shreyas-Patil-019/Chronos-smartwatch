@@ -1,4 +1,4 @@
-import React, { Suspense, useRef, useEffect } from 'react';
+import React, { Suspense, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import * as THREE from 'three';
@@ -74,7 +74,6 @@ const CameraResetController = ({ isResetting, onResetComplete, controlsRef }) =>
  */
 export const WatchScene = ({
   color = '#121214',
-  strap = 'silicone-black',
   autoRotate = false,
   enableMouseInteraction = false,
   scale = 1,
@@ -140,7 +139,6 @@ export const WatchScene = ({
             <WatchLighting />
             <WatchModel
               color={color}
-              strap={strap}
               enableMouseInteraction={enableMouseInteraction}
               scale={scale}
               modelUrl={modelUrl}

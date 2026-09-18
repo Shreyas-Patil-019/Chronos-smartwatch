@@ -11,18 +11,18 @@ import ErrorBoundary from '../ui/ErrorBoundary';
 import { RotateCcw, Play, Pause, Sparkles, Hand, Eye, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 35 },
+const getFadeInUp = (shouldReduce) => ({
+  hidden: { opacity: 0, y: shouldReduce ? 0 : 35 },
   visible: (custom = 0) => ({
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.7,
+      duration: shouldReduce ? 0 : 0.7,
       ease: [0.16, 1, 0.3, 1],
-      delay: custom * 0.1,
+      delay: shouldReduce ? 0 : custom * 0.1,
     },
   }),
-};
+});
 
 const CanvasLoader = () => (
   <Html center>
@@ -102,6 +102,7 @@ const ControlledWatchScene = ({ finish, isAutoRotating, isResetting, onResetComp
 
 export const InteractiveShowroomSection = () => {
   const shouldReduceMotion = useReducedMotion();
+  const fadeInUp = getFadeInUp(shouldReduceMotion);
   const [selectedFinish, setSelectedFinish] = useState({
     color: '#121214',
     name: 'Space Black Titanium',

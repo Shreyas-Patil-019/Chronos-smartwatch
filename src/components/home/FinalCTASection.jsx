@@ -4,21 +4,22 @@ import { ArrowRight, Watch } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Button from '../ui/Button';
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 35 },
+const getFadeInUp = (shouldReduce) => ({
+  hidden: { opacity: 0, y: shouldReduce ? 0 : 35 },
   visible: (custom = 0) => ({
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.7,
+      duration: shouldReduce ? 0 : 0.7,
       ease: [0.16, 1, 0.3, 1],
-      delay: custom * 0.12,
+      delay: shouldReduce ? 0 : custom * 0.12,
     },
   }),
-};
+});
 
 export const FinalCTASection = () => {
   const shouldReduceMotion = useReducedMotion();
+  const fadeInUp = getFadeInUp(shouldReduceMotion);
 
   return (
     <section className="relative py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10 border-t border-zinc-900 text-center">
