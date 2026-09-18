@@ -6,38 +6,44 @@ import React from 'react';
 export const WatchLighting = () => {
   return (
     <>
-      {/* Soft Ambient Fill */}
-      <ambientLight intensity={0.7} />
+      {/* Balanced Studio Ambient Fill */}
+      <ambientLight intensity={0.5} />
 
-      {/* Key Directional Light (Top-Right Warm Studio Light) */}
+      {/* Hemisphere Studio Gradient (Soft sky & ground fill for continuous 360° visibility) */}
+      <hemisphereLight
+        skyColor="#ffffff"
+        groundColor="#475569"
+        intensity={0.35}
+      />
+
+      {/* Key Studio Light (Defines form and chamfer highlights) */}
       <directionalLight
-        position={[6, 8, 6]}
-        intensity={1.8}
+        position={[4, 6, 4]}
+        intensity={0.95}
         castShadow
         shadow-mapSize-width={1024}
         shadow-mapSize-height={1024}
         shadow-bias={-0.0001}
       />
 
-      {/* Cool Rim Edge Light (Left Rear Edge Sheen) */}
+      {/* Fill Studio Light (Softens contrast and reveals shadow details) */}
       <directionalLight
-        position={[-6, 4, -4]}
-        intensity={1.2}
-        color="#38bdf8"
+        position={[-4, 2, 3]}
+        intensity={0.6}
+        color="#f8fafc"
       />
 
-      {/* Gold Under-Glow Point Light */}
-      <pointLight
-        position={[0, -3, 3]}
-        intensity={0.9}
-        color="#fbbf24"
-        distance={8}
+      {/* Overhead & Rear Rim Light (Accents silhouette and crown profile) */}
+      <directionalLight
+        position={[0, 5, -4]}
+        intensity={0.45}
+        color="#ffffff"
       />
 
-      {/* Front Face Soft Fill */}
+      {/* Dedicated Front Face Soft Fill (Ensures dial & bezel clarity from camera angle) */}
       <directionalLight
-        position={[0, 2, 8]}
-        intensity={0.4}
+        position={[0, 1, 6]}
+        intensity={0.5}
         color="#ffffff"
       />
     </>
