@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
+import usePageSEO from '../../hooks/usePageSEO';
 import {
   ShieldCheck,
   Truck,
@@ -75,6 +76,11 @@ export const CheckoutPage = () => {
   const { cartItems, cartSubtotal, totalItemCount, clearCart } = useCart();
   const navigate = useNavigate();
   const shouldReduceMotion = useReducedMotion();
+
+  usePageSEO({
+    title: 'CHRONOS — Secure Timepiece Allocation Checkout',
+    description: 'Complete your luxury timepiece allocation with white-glove courier delivery and full international warranty coverage.',
+  });
 
   // Form State initialized with authenticated user details
   const [formData, setFormData] = useState({

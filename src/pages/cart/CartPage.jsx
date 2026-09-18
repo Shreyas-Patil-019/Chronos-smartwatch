@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ShoppingBag, ArrowLeft, Trash2, Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
+import usePageSEO from '../../hooks/usePageSEO';
 import { useCart } from '../../hooks/useCart';
 import CartItem from '../../components/cart/CartItem';
 import CartSummary from '../../components/cart/CartSummary';
@@ -23,6 +24,11 @@ const fadeInUp = {
 export const CartPage = () => {
   const { cartItems, updateQuantity, removeItem, clearCart, cartSubtotal, totalItemCount } = useCart();
   const shouldReduceMotion = useReducedMotion();
+
+  usePageSEO({
+    title: 'CHRONOS — Your Shopping Bag',
+    description: 'Review and manage your selected CHRONOS luxury smartwatch configurations and bespoke allocations.',
+  });
 
   return (
     <div className="relative min-h-screen bg-black text-white selection:bg-amber-400 selection:text-black overflow-x-hidden">

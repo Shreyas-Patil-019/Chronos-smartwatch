@@ -38,6 +38,10 @@ export const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
           <img
             src={mainImage}
             alt={product.name}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = '/assets/chronos-pro-main.jpg';
+            }}
             className="w-full h-full object-contain filter drop-shadow-lg group-hover:scale-110 transition-transform duration-300"
           />
         </Link>

@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import usePageSEO from '../../hooks/usePageSEO';
 import ProductGrid from '../../components/product/ProductGrid';
 import ProductFilters from '../../components/product/ProductFilters';
 import SearchBar from '../../components/ui/SearchBar';
@@ -24,6 +25,12 @@ export const ProductsPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('featured');
   const shouldReduceMotion = useReducedMotion();
+
+  usePageSEO({
+    title: 'CHRONOS — Smartwatch Collection',
+    description: 'Browse our luxury collection of custom surgical titanium, zirconia ceramic, and sapphire crystal smartwatches.',
+    image: '/assets/chronos-pro-main.jpg',
+  });
 
   const handleResetFilters = () => {
     setSelectedCategory('all');

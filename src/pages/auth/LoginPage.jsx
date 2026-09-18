@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Watch, Eye, EyeOff, ArrowRight, ShieldCheck, AlertCircle, Sparkles } from 'lucide-react';
+import usePageSEO from '../../hooks/usePageSEO';
 import { useAuth } from '../../hooks/useAuth';
 import Button from '../../components/ui/Button';
 
@@ -12,6 +13,11 @@ export const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [validationError, setValidationError] = useState('');
   const shouldReduceMotion = useReducedMotion();
+
+  usePageSEO({
+    title: 'CHRONOS — Collector Sign In',
+    description: 'Sign in to access your CHRONOS precision timepiece portfolio, saved configurations, and concierge benefits.',
+  });
 
   const navigate = useNavigate();
   const location = useLocation();

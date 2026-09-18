@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Link, useSearchParams, useLocation } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
+import usePageSEO from '../../hooks/usePageSEO';
 import {
   CheckCircle2,
   Package,
@@ -23,6 +24,11 @@ export const OrderSuccessPage = () => {
   const shouldReduceMotion = useReducedMotion();
 
   const orderIdFromQuery = searchParams.get('orderId');
+
+  usePageSEO({
+    title: 'CHRONOS — Allocation Confirmed',
+    description: 'Your bespoke CHRONOS luxury smartwatch allocation has been successfully recorded and prepared for courier dispatch.',
+  });
 
   // Retrieve order from location state, by orderId from query params, or latest stored order
   const order = useMemo(() => {

@@ -16,6 +16,7 @@ export const ProductViewer = ({
   enableMouseInteraction = false,
   scale = 1,
   modelUrl = '/models/chronos-watch.glb',
+  fallbackImage = '/assets/chronos-pro-main.jpg',
   showControls = true,
 }) => {
   const [hasWebGL, setHasWebGL] = useState(true);
@@ -25,10 +26,13 @@ export const ProductViewer = ({
   const controlsRef = useRef(null);
 
   useEffect(() => {
-    // Check WebGL availability
+    // Check WebGL availability safely
     try {
       const canvas = document.createElement('canvas');
-      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      const gl =
+        canvas.getContext('webgl2') ||
+        canvas.getContext('webgl') ||
+        canvas.getContext('experimental-webgl');
       if (!gl) {
         setHasWebGL(false);
       }
@@ -54,14 +58,22 @@ export const ProductViewer = ({
 
   if (!hasWebGL) {
     return (
-      <div className={`relative flex items-center justify-center bg-zinc-900/60 border border-zinc-800 rounded-3xl p-8 ${className}`}>
-        <div className="text-center space-y-3">
-          <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-tr from-amber-500/20 to-blue-500/20 border border-amber-500/30 flex items-center justify-center">
-            <span className="text-2xl font-mono text-amber-400">3D</span>
+      <div className={`relative flex flex-col items-center justify-center bg-zinc-950/80 border border-zinc-800 rounded-3xl p-6 text-center space-y-4 ${className}`}>
+        {fallbackImage && (
+          <div className="w-44 h-44 flex items-center justify-center">
+            <img
+              src={fallbackImage}
+              alt="CHRONOS Luxury Timepiece"
+              className="max-h-full max-w-full object-contain filter drop-shadow-2xl"
+            />
           </div>
-          <h4 className="text-sm font-mono text-white tracking-widest uppercase">CHRONOS Product Viewer</h4>
-          <p className="text-xs text-zinc-400 max-w-xs">
-            WebGL acceleration is disabled on this device. Displaying fallback luxury watch preview.
+        )}
+        <div className="space-y-1 max-w-xs">
+          <h4 className="text-xs font-mono font-bold text-amber-400 tracking-widest uppercase">
+            3D VIEW UNAVAILABLE
+          </h4>
+          <p className="text-[11px] text-zinc-400 font-sans leading-relaxed">
+            Your device or browser does not currently support the required 3D experience. Displaying luxury timepiece photography.
           </p>
         </div>
       </div>
@@ -69,9 +81,19 @@ export const ProductViewer = ({
   }
 
   return (
-    <div className={`relative overflow-hidden group touch-none ${className}`}>
+    <div
+      role="region"
+      aria-label="Interactive 3D smartwatch model viewport. Drag with mouse or swipe on touch to rotate 360 degrees. Pinch or scroll to zoom."
+      tabIndex={0}
+      className={`relative overflow-hidden group touch-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black ${className}`}
+    >
+      {/* Screen Reader Only Detailed Description */}
+      <span className="sr-only">
+        Interactive 3D viewport displaying CHRONOS smartwatch model. Use mouse drag or touch drag to rotate the watch 360 degrees. Use the interactive controls toolbar at the bottom to toggle auto-rotation or reset view orientation.
+      </span>
+
       {/* Non-intrusive Instructional Micro-Badges */}
-      <div className="absolute top-4 left-4 z-20 flex items-center gap-2 pointer-events-none">
+      <div className="absolute top-4 left-4 z-20 flex items-center gap-2 pointer-events-none" aria-hidden="true">
         <div className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900/90 border border-zinc-800 rounded-xl backdrop-blur-md shadow-md">
           <Hand className="w-3.5 h-3.5 text-amber-400" />
           <span className="text-[10px] font-mono text-zinc-300 uppercase tracking-widest">
@@ -86,12 +108,27 @@ export const ProductViewer = ({
         </div>
       </div>
 
-      {/* 3D Scene Viewport */}
+      {/* 3D Scene Viewport with Fallback */}
       <ErrorBoundary
         fallback={
-          <div className="flex flex-col items-center justify-center h-full bg-zinc-900/40 rounded-2xl border border-zinc-800 p-6 text-center text-zinc-400">
-            <span className="text-xs font-mono text-amber-400 uppercase tracking-widest mb-1">Interactive Viewer Ready</span>
-            <span className="text-xs text-zinc-500">3D graphics stream active</span>
+          <div className="flex flex-col items-center justify-center h-full bg-zinc-950/80 rounded-2xl border border-zinc-800 p-6 text-center space-y-4">
+            {fallbackImage && (
+              <div className="w-40 h-40 flex items-center justify-center">
+                <img
+                  src={fallbackImage}
+                  alt="CHRONOS Timepiece Gallery Render"
+                  className="max-h-full max-w-full object-contain filter drop-shadow-2xl"
+                />
+              </div>
+            )}
+            <div className="space-y-1">
+              <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-widest block">
+                3D EXPERIENCE UNAVAILABLE
+              </span>
+              <span className="text-[11px] text-zinc-400 font-sans block">
+                Unable to load the interactive model. Displaying high-precision gallery render.
+              </span>
+            </div>
           </div>
         }
       >
@@ -112,23 +149,28 @@ export const ProductViewer = ({
 
       {/* Interactive Controls Overlay Bar */}
       {showControls && (
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-3.5 py-1.5 bg-zinc-900/90 border border-zinc-800 rounded-full backdrop-blur-md shadow-xl">
+        <div
+          role="toolbar"
+          aria-label="3D Viewport Controls"
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-3.5 py-1.5 bg-zinc-900/90 border border-zinc-800 rounded-full backdrop-blur-md shadow-xl"
+        >
           <button
             onClick={() => setIsAutoRotating(!isAutoRotating)}
-            className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition"
+            className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
             title={isAutoRotating ? 'Pause auto-rotation' : 'Play auto-rotation'}
-            aria-label="Toggle auto rotate"
+            aria-label={isAutoRotating ? 'Pause auto-rotation' : 'Play auto-rotation'}
+            aria-pressed={isAutoRotating}
           >
-            {isAutoRotating ? <Pause className="w-3.5 h-3.5 text-amber-400" /> : <Play className="w-3.5 h-3.5" />}
+            {isAutoRotating ? <Pause className="w-3.5 h-3.5 text-amber-400" aria-hidden="true" /> : <Play className="w-3.5 h-3.5" aria-hidden="true" />}
           </button>
-          <div className="w-px h-3.5 bg-zinc-800" />
+          <div className="w-px h-3.5 bg-zinc-800" aria-hidden="true" />
           <button
             onClick={handleResetView}
-            className={`p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition ${isResetting ? 'animate-spin text-amber-400' : ''}`}
+            className={`p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${isResetting ? 'animate-spin text-amber-400' : ''}`}
             title="Reset product view orientation"
-            aria-label="Reset product view"
+            aria-label="Reset product view orientation"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
+            <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
           </button>
         </div>
       )}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Watch, Eye, EyeOff, ArrowRight, ShieldCheck, AlertCircle, Sparkles } from 'lucide-react';
+import usePageSEO from '../../hooks/usePageSEO';
 import { useAuth } from '../../hooks/useAuth';
 import Button from '../../components/ui/Button';
 
@@ -15,6 +16,11 @@ export const RegisterPage = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [validationError, setValidationError] = useState('');
   const shouldReduceMotion = useReducedMotion();
+
+  usePageSEO({
+    title: 'CHRONOS — Join the Collective (Create Account)',
+    description: 'Join the CHRONOS collective to unlock personalized 3D timepiece configurations, priority allocations, and concierge services.',
+  });
 
   const navigate = useNavigate();
 

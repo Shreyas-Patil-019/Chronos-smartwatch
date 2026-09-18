@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
+import usePageSEO from '../../hooks/usePageSEO';
 import {
   User,
   LogOut,
@@ -42,6 +43,11 @@ export const AccountPage = () => {
   const navigate = useNavigate();
   const shouldReduceMotion = useReducedMotion();
   const [activeTab, setActiveTab] = useState('profile');
+
+  usePageSEO({
+    title: user ? `CHRONOS — Collector Account (${user.name})` : 'CHRONOS — Member Account',
+    description: 'Manage your CHRONOS timepiece portfolio, allocations, concierge support, and global warranty records.',
+  });
 
   const userOrders = getUserOrders(user?.email || user?.id);
 

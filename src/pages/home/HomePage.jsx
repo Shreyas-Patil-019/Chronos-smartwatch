@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ShieldCheck, Cpu, BatteryCharging, Sparkles } from 'lucide-react';
+import usePageSEO from '../../hooks/usePageSEO';
 import HeroSection from '../../components/home/HeroSection';
 import LifestyleSection from '../../components/home/LifestyleSection';
 import TechnologySection from '../../components/home/TechnologySection';
@@ -37,6 +38,12 @@ const scaleUp = {
 
 export const HomePage = () => {
   const shouldReduceMotion = useReducedMotion();
+
+  usePageSEO({
+    title: 'CHRONOS — TIME. REIMAGINED.',
+    description: 'Explore the CHRONOS luxury smartwatch collection. Aerospace-grade titanium, surgical ceramic, and sapphire crystal precision engineering.',
+    image: '/assets/chronos-pro-main.jpg',
+  });
 
   return (
     <div className="relative min-h-screen bg-black text-white selection:bg-amber-400 selection:text-black overflow-x-hidden">

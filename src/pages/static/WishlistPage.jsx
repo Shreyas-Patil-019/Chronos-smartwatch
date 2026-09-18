@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Heart, ShoppingBag, Trash2, ArrowRight, Sparkles, Star, ArrowLeft, Check, ShieldCheck } from 'lucide-react';
+import usePageSEO from '../../hooks/usePageSEO';
 import { useWishlist } from '../../hooks/useWishlist';
 import { useCart } from '../../hooks/useCart';
 import { formatCurrency, formatRating } from '../../utils/formatters';
@@ -25,6 +26,11 @@ export const WishlistPage = () => {
   const { addItem } = useCart();
   const [addedIds, setAddedIds] = useState({});
   const shouldReduceMotion = useReducedMotion();
+
+  usePageSEO({
+    title: 'CHRONOS — Saved Wishlist',
+    description: 'View and manage your saved portfolio of CHRONOS luxury smartwatch editions and custom configurations.',
+  });
 
   const handleAddToCartFromWishlist = (product) => {
     if (!product) return;
@@ -167,6 +173,10 @@ export const WishlistPage = () => {
                           src={mainImage}
                           alt={product.name}
                           loading="lazy"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = '/assets/chronos-pro-main.jpg';
+                          }}
                           className="w-full h-full object-contain filter drop-shadow-2xl group-hover:scale-105 transition-transform duration-500"
                         />
                       </Link>

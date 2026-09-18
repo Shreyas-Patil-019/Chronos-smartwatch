@@ -1,0 +1,8 @@
+# CHRONOS Luxury Timepieces robots.txt
+User-agent: *
+Allow: /
+Disallow: /account
+Disallow: /checkout
+Disallow: /order-success
+
+Sitemap: /sitemap.xml

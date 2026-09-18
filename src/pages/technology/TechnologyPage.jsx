@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
 import { Cpu, Radio, Battery, Compass, ShieldCheck, Layers, Activity, Smartphone, HeartPulse } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import usePageSEO from '../../hooks/usePageSEO';
 
 export const TechnologyPage = () => {
   const [selectedTech, setSelectedTech] = useState('display');
+
+  usePageSEO({
+    title: 'CHRONOS — Precision Engineering & Architecture',
+    description: 'Explore the quantum silicon architecture, LTPO AMOLED displays, dual-band satellite telemetry, and medical-grade sensors powering CHRONOS.',
+  });
 
   const techModules = [
     {

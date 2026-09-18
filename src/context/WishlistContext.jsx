@@ -12,11 +12,11 @@ export const WishlistProvider = ({ children }) => {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) {
-          return parsed.filter((item) => item && item.id);
+          return parsed.filter((item) => item && item.id && item.name);
         }
       }
     } catch (e) {
-      console.warn('Could not restore CHRONOS wishlist from localStorage:', e);
+      console.warn('Could not restore CHRONOS wishlist from localStorage, initializing fresh state:', e);
     }
     return [];
   });

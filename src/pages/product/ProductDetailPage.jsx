@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
+import usePageSEO from '../../hooks/usePageSEO';
 import { getProductBySlug, products } from '../../data/products';
 import ProductViewer from '../../components/three/ProductViewer';
 import WatchCustomizer from '../../components/three/WatchCustomizer';
@@ -40,6 +41,12 @@ export const ProductDetailPage = () => {
   const { toggleWishlist, isInWishlist } = useWishlist();
   const shouldReduceMotion = useReducedMotion();
 
+  usePageSEO({
+    title: product ? `CHRONOS — ${product.name}` : 'CHRONOS — Timepiece Details',
+    description: product ? (product.shortDescription || product.description) : 'CHRONOS luxury smartwatch details and specifications.',
+    image: product?.images?.[0] || '/assets/chronos-pro-main.jpg',
+  });
+
   // Unified color finish (synchronizes case and matching strap in 3D model)
   const [selectedColor, setSelectedColor] = useState(product?.colors?.[0]?.hex || '#121214');
   const [selectedWatchFace, setSelectedWatchFace] = useState(product?.watchFaces?.[0]?.id || 'chronograph');
@@ -59,23 +66,68 @@ export const ProductDetailPage = () => {
 
   // Invalid product fallback state
   if (!product) {
+    const featuredFallbackProducts = products.slice(0, 3);
+
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center px-4 py-24">
-        <div className="max-w-md w-full bg-zinc-950 border border-zinc-800 rounded-3xl p-8 text-center space-y-6 shadow-2xl">
-          <div className="w-16 h-16 mx-auto rounded-full bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-amber-400">
-            <Sparkles className="w-8 h-8" />
+      <div className="min-h-screen bg-black text-white selection:bg-amber-400 selection:text-black flex flex-col items-center justify-center px-4 py-24 relative overflow-x-hidden">
+        {/* Ambient Glow */}
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-amber-500/5 blur-3xl rounded-full pointer-events-none" />
+
+        <div className="max-w-4xl w-full space-y-12 relative z-10">
+          {/* Main Error Box */}
+          <div className="max-w-lg mx-auto bg-zinc-950/90 border border-zinc-800/90 rounded-3xl p-8 sm:p-10 text-center space-y-6 shadow-2xl backdrop-blur-xl">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-zinc-900 border border-amber-400/30 rounded-full">
+              <Sparkles className="w-3 h-3 text-amber-400" />
+              <span className="text-[9px] font-mono font-bold tracking-[0.25em] text-amber-400 uppercase">
+                CATALOG QUERY
+              </span>
+            </div>
+
+            <div className="w-16 h-16 mx-auto rounded-2xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-amber-400 shadow-inner">
+              <Sparkles className="w-8 h-8" />
+            </div>
+
+            <div className="space-y-2">
+              <h1 className="text-2xl sm:text-3xl font-mono font-black uppercase text-white tracking-tight">
+                TIMEPIECE NOT FOUND
+              </h1>
+              <p className="text-xs sm:text-sm text-zinc-400 font-sans leading-relaxed">
+                The requested smartwatch edition (<span className="text-amber-400 font-mono">"{slug}"</span>) is not present in the active CHRONOS catalog.
+              </p>
+            </div>
+
+            <div className="pt-2">
+              <Link to="/products">
+                <Button
+                  variant="gold"
+                  size="md"
+                  style={{ color: '#000000', backgroundColor: '#d4af37' }}
+                  className="w-full font-mono text-xs uppercase tracking-widest font-bold py-3.5 flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:shadow-amber-500/20"
+                >
+                  <ArrowLeft className="w-4 h-4 text-black" style={{ color: '#000000' }} />
+                  <span style={{ color: '#000000', fontWeight: 800 }}>Return to Collection</span>
+                </Button>
+              </Link>
+            </div>
           </div>
-          <div className="space-y-2">
-            <h2 className="text-2xl font-mono font-black uppercase text-white">Product Not Found</h2>
-            <p className="text-xs text-zinc-400 font-sans leading-relaxed">
-              The requested smartwatch model ({slug}) is not currently in the CHRONOS catalog.
-            </p>
+
+          {/* Curated Alternatives Grid */}
+          <div className="space-y-6 pt-4">
+            <div className="text-center space-y-1">
+              <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-amber-400 font-bold block">
+                EXPLORE ACTIVE LINEUP
+              </span>
+              <h3 className="text-xl sm:text-2xl font-mono font-bold text-white uppercase tracking-tight">
+                AVAILABLE TIMEPIECES
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {featuredFallbackProducts.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
           </div>
-          <Link to="/products">
-            <Button variant="gold" size="md" className="w-full font-mono text-xs uppercase tracking-widest font-bold">
-              Back to Collection
-            </Button>
-          </Link>
         </div>
       </div>
     );
@@ -143,6 +195,7 @@ export const ProductDetailPage = () => {
 
               <ProductViewer
                 color={selectedColor}
+                fallbackImage={product.images?.[0] || '/assets/chronos-pro-main.jpg'}
                 enableMouseInteraction={true}
                 className="w-full h-[450px] sm:h-[540px]"
                 showControls={true}

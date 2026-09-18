@@ -9,15 +9,23 @@ import WatchEnvironment from './WatchEnvironment';
 import ErrorBoundary from '../ui/ErrorBoundary';
 
 /**
- * R3F Canvas Loading Spinner Component
+ * R3F Canvas Loading Component — "LOADING CHRONOS"
  */
 const CanvasLoader = () => (
   <Html center>
-    <div className="flex flex-col items-center justify-center p-4 text-center space-y-2 pointer-events-none">
-      <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
-      <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase whitespace-nowrap">
-        Loading 3D Smartwatch...
-      </span>
+    <div className="flex flex-col items-center justify-center p-5 text-center space-y-3 pointer-events-none bg-zinc-950/80 border border-zinc-800/80 rounded-2xl backdrop-blur-md shadow-2xl">
+      <div className="relative w-9 h-9 flex items-center justify-center">
+        <div className="absolute inset-0 rounded-full border-2 border-amber-400/20 animate-ping" />
+        <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+      </div>
+      <div className="space-y-0.5">
+        <span className="text-[10px] font-mono font-bold tracking-[0.25em] text-amber-400 uppercase whitespace-nowrap block">
+          LOADING CHRONOS
+        </span>
+        <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest block">
+          INITIALIZING 3D ENGINE
+        </span>
+      </div>
     </div>
   </Html>
 );
@@ -83,12 +91,26 @@ export const WatchScene = ({
   // Responsive device pixel ratio capping for low-end laptops & mobile
   const effectiveDpr = dpr !== null ? dpr : (typeof window !== 'undefined' ? [1, Math.min(window.devicePixelRatio || 1, 1.5)] : 1);
 
+  const handleContextLost = (event) => {
+    event.preventDefault();
+    console.warn('CHRONOS WebGL context lost. Attempting recovery...');
+  };
+
+  const handleContextRestored = () => {
+    console.info('CHRONOS WebGL context successfully restored.');
+  };
+
   return (
     <div className={`relative touch-none ${className}`}>
       <ErrorBoundary
         fallback={
-          <div className="flex items-center justify-center h-full text-zinc-500 text-sm font-mono">
-            3D Stream Unavailable
+          <div className="flex flex-col items-center justify-center h-full text-center p-6 space-y-2 bg-zinc-950/60 rounded-2xl border border-zinc-800">
+            <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-widest">
+              3D EXPERIENCE UNAVAILABLE
+            </span>
+            <span className="text-[11px] text-zinc-400 font-sans">
+              Unable to load interactive 3D model.
+            </span>
           </div>
         }
       >
@@ -107,6 +129,11 @@ export const WatchScene = ({
           onCreated={({ gl }) => {
             gl.toneMapping = THREE.ACESFilmicToneMapping;
             gl.toneMappingExposure = 1.05;
+            const canvasEl = gl.domElement;
+            if (canvasEl) {
+              canvasEl.addEventListener('webglcontextlost', handleContextLost, false);
+              canvasEl.addEventListener('webglcontextrestored', handleContextRestored, false);
+            }
           }}
         >
           <Suspense fallback={<CanvasLoader />}>

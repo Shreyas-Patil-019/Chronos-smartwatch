@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { KeyRound, ArrowLeft, ArrowRight, ShieldCheck, AlertCircle, CheckCircle2, Sparkles } from 'lucide-react';
+import usePageSEO from '../../hooks/usePageSEO';
 import { useAuth } from '../../hooks/useAuth';
 import Button from '../../components/ui/Button';
 
@@ -11,6 +12,11 @@ export const ForgotPasswordPage = () => {
   const [validationError, setValidationError] = useState('');
   const [successInfo, setSuccessInfo] = useState(null);
   const shouldReduceMotion = useReducedMotion();
+
+  usePageSEO({
+    title: 'CHRONOS — Account Credential Recovery',
+    description: 'Enter your registered CHRONOS email address to receive password reset authentication instructions.',
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();

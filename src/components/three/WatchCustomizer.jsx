@@ -33,35 +33,42 @@ export const WatchCustomizer = ({
       {/* ── 1. UNIFIED CASE & MATCHING STRAP FINISH ──────────── */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <label className="text-xs font-mono uppercase tracking-widest text-zinc-400 font-bold flex items-center gap-2">
-            <Palette className="w-3.5 h-3.5 text-amber-400" />
+          <span id="case-finish-label" className="text-xs font-mono uppercase tracking-widest text-zinc-400 font-bold flex items-center gap-2">
+            <Palette className="w-3.5 h-3.5 text-amber-400" aria-hidden="true" />
             <span>1. Case & Matching Strap Finish</span>
-          </label>
-          <span className="text-xs font-mono text-amber-400 font-semibold">
+          </span>
+          <span className="text-xs font-mono text-amber-400 font-semibold" aria-live="polite">
             {activeColorObj?.name}
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+        <div
+          role="radiogroup"
+          aria-labelledby="case-finish-label"
+          className="grid grid-cols-1 sm:grid-cols-3 gap-2.5"
+        >
           {colors.map((c) => {
             const isSelected = selectedColor === c.hex || selectedColor === c.id;
             return (
               <button
                 key={c.id}
                 type="button"
+                role="radio"
+                aria-checked={isSelected}
                 onClick={() => onSelectColor(c.hex)}
-                className={`p-3 rounded-xl text-left border transition-all duration-300 cursor-pointer flex items-center gap-3 ${
+                className={`p-3 rounded-xl text-left border transition-all duration-300 cursor-pointer flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
                   isSelected
                     ? 'bg-zinc-900 border-amber-400 text-white shadow-md shadow-amber-400/10'
                     : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
                 }`}
-                title={`${c.name} (Matched Case & Strap)`}
+                aria-label={`${c.name} matched case and strap finish${isSelected ? ', currently selected' : ''}`}
               >
                 <span
                   className={`w-6 h-6 rounded-full border-2 shrink-0 transition-transform ${
                     isSelected ? 'border-amber-400 scale-110 shadow-sm' : 'border-zinc-700'
                   }`}
                   style={{ backgroundColor: c.hex }}
+                  aria-hidden="true"
                 />
                 <div className="min-w-0 flex-1">
                   <span className="text-xs font-mono font-bold text-white block truncate">
@@ -71,7 +78,7 @@ export const WatchCustomizer = ({
                     Matched Band
                   </span>
                 </div>
-                {isSelected && <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" />}
+                {isSelected && <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" aria-hidden="true" />}
               </button>
             );
           })}
@@ -82,27 +89,34 @@ export const WatchCustomizer = ({
       {watchFaces.length > 0 && (
         <div>
           <div className="flex items-center justify-between mb-3">
-            <label className="text-xs font-mono uppercase tracking-widest text-zinc-400 font-bold">
+            <span id="watchface-label" className="text-xs font-mono uppercase tracking-widest text-zinc-400 font-bold">
               2. Dial Interface
-            </label>
-            <span className="text-xs font-mono text-zinc-500">
+            </span>
+            <span className="text-xs font-mono text-zinc-500" aria-live="polite">
               {activeFaceObj?.style}
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+          <div
+            role="radiogroup"
+            aria-labelledby="watchface-label"
+            className="grid grid-cols-1 sm:grid-cols-3 gap-2.5"
+          >
             {watchFaces.map((f) => {
               const isSelected = selectedWatchFace === f.id;
               return (
                 <button
                   key={f.id}
                   type="button"
+                  role="radio"
+                  aria-checked={isSelected}
                   onClick={() => onSelectWatchFace(f.id)}
-                  className={`p-3 rounded-xl text-center border transition-all duration-300 cursor-pointer ${
+                  className={`p-3 rounded-xl text-center border transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
                     isSelected
                       ? 'bg-zinc-900 border-amber-400 text-white shadow-md shadow-amber-400/10'
                       : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
                   }`}
+                  aria-label={`${f.name} dial interface (${f.style})${isSelected ? ', currently selected' : ''}`}
                 >
                   <div className="text-xs font-mono font-bold uppercase tracking-tight text-white mb-0.5 truncate">
                     {f.name}
