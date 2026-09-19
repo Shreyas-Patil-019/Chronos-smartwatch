@@ -401,34 +401,52 @@ All smartwatch timepieces are structured within `src/data/products.js` using a c
 ## 12. Installation & Local Development
 
 ### Prerequisites
-- **Node.js**: `v18.0.0` or higher
-- **npm**: `v9.0.0` or higher (or equivalent package manager)
-- **Git**: Installed and configured
+- **Node.js**: `v18.0.0` or higher ([Download Node.js](https://nodejs.org/))
+- **npm**: `v9.0.0` or higher
+- **Git**: Installed and configured (optional if downloading ZIP)
 
-### Setup Instructions
+---
 
-1. **Clone the repository**:
+### Option A: Quick 1-Click Launch (Recommended for ZIP Downloads)
+
+If you downloaded the project as a **ZIP file from GitHub**:
+
+1. Extract the downloaded `Chronos-smartwatch-main.zip`.
+2. Open the extracted folder.
+3. **Windows**: Double-click `start.bat`.  
+   **macOS / Linux**: Run `./start.sh` in terminal.
+4. The launcher will automatically:
+   - Check your Node.js installation.
+   - Automatically install missing dependencies (`node_modules`).
+   - Start the Vite development server.
+   - Automatically open `http://localhost:5173` in your default browser.
+
+---
+
+### Option B: Standard Terminal Setup
+
+1. **Clone the repository** (or extract the downloaded ZIP):
    ```bash
    git clone https://github.com/Shreyas-Patil-019/Chronos-smartwatch.git
-   ```
-
-2. **Navigate into the project directory**:
-   ```bash
    cd Chronos-smartwatch
    ```
 
-3. **Install dependencies**:
+2. **Install dependencies**:
    ```bash
    npm install
    ```
+   *(Creates the `node_modules` directory containing React, Vite, Three.js, and Tailwind).*
 
-4. **Start the local development server**:
+3. **Start the local development server**:
    ```bash
-   npm run dev
+   npm start
    ```
+   *(or `npm run dev`)*
 
-5. **Open in browser**:
-   Navigate to `http://localhost:5173` (or the port specified in terminal output).
+4. **Open in browser**:
+   The app will open automatically at **`http://localhost:5173`**.
+
+> **Important Note**: Do **not** double-click `index.html` directly from File Explorer. Because CHRONOS is built on modern React with ES Modules and WebGL, it must be served through a local development server (`npm start` or `start.bat`) so the browser can compile JSX and load the 3D assets over HTTP.
 
 ---
 
